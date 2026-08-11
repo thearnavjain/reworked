@@ -1302,11 +1302,10 @@ export default function CavernCombat({
         style={{
           ...styles.shell,
           ...styles.finishShell,
-          backgroundImage: `linear-gradient(rgba(4, 5, 15, .25), rgba(4, 5, 15, .82)), url("${CAVERN_ESCAPED}")`,
+          backgroundImage: `url("${CAVERN_ESCAPED}")`,
         }}
       >
-        <div style={styles.finishCard}>
-          <div style={styles.finishIcon}><WizardSprite animation="victory" /></div>
+        <div style={styles.finishContent}>
           <div style={styles.finishKicker}>CAVERN ESCAPED</div>
           <h1 style={styles.finishTitle}>YOU MADE IT OUT!</h1>
           <p style={styles.finishText}>The cavern falls silent behind you.</p>
@@ -1334,14 +1333,14 @@ export default function CavernCombat({
               }}
               style={{ ...styles.finishButton, ...styles.finishPrimary }}
             >
-              ⚔️ PLAY AGAIN
+              PLAY AGAIN
             </button>
             <button
               type="button"
               onClick={() => onExit?.()}
               style={{ ...styles.finishButton, ...styles.finishSecondary }}
             >
-              ← BACK TO DASHBOARD
+              BACK TO DASHBOARD
             </button>
           </div>
         </div>
@@ -1735,6 +1734,7 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 
   beastStage: {
@@ -2023,24 +2023,15 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '18px 14px',
-  },
-
-  finishCard: {
-    width: 'min(680px, 100%)',
-    padding: '28px clamp(18px, 5vw, 44px)',
-    background: 'rgba(7, 6, 19, .9)',
-    border: '1px solid rgba(176, 155, 255, .48)',
-    boxShadow: '0 0 50px rgba(124, 92, 255, .18), 0 24px 70px rgba(0,0,0,.55)',
     textAlign: 'center',
-    animation: 'cavernFadeIn .6s ease-out',
   },
 
-  finishIcon: {
-    height: 170,
-    marginBottom: 6,
+  finishContent: {
+    width: 'min(760px, 100%)',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    animation: 'cavernFadeIn .6s ease-out',
   },
 
   finishKicker: {
@@ -2064,20 +2055,16 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   finishStats: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    gap: 12,
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 'clamp(28px, 7vw, 72px)',
     margin: '18px auto',
-    maxWidth: 420,
   },
 
   finishStat: {
-    padding: '12px 10px',
-    border: '1px solid rgba(166, 139, 255, .28)',
-    background: 'rgba(15, 13, 34, .8)',
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 6,
   },
 
   finishStatLabel: {
