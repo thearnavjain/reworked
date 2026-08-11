@@ -5,14 +5,17 @@ export type CavernQuestion = {
   question?: string
   choices?: string[]
   options?: string[]
-  answer?: string | number
   correctAnswer?: string | number
   correct_answer?: string | number
+  answer?: string | number
 }
+
+type GamePhase = 'appearing' | 'question' | 'attacking' | 'hit' | 'defeated' | 'complete'
 
 type CavernCombatProps = {
   questions: CavernQuestion[]
   onComplete: (score: number, total: number) => void
+  onExit?: () => void
   assignmentTitle?: string
 }
 
@@ -821,12 +824,9 @@ const BEASTS: Beast[] = [
   CORRUPTED_NATURE_GUARDIAN,
 ]
 
-const BACKGROUNDS = [
-  '/assets/cavern/backgrounds/cavern-entrance.jpg',
-  '/assets/cavern/backgrounds/cavern-depths.jpg',
-  '/assets/cavern/backgrounds/underground-lake.jpg',
-  '/assets/cavern/backgrounds/guardian-chamber.jpg',
-]
+const GAMEPLAY_BACKDROP = '/assets/cavern/backgrounds/cavern-backdrop.png'
+const FINISH_BACKDROP = '/assets/cavern/backgrounds/cavern-escaped.png'
+const WIZARD_SHEET = '/assets/cavern/beasts/wizard.png'
 
 const getPrompt = (q: CavernQuestion) => q.prompt ?? q.question ?? ''
 
@@ -903,12 +903,23 @@ function BeastSprite({
   const frame = frames[Math.min(frameIndex, frames.length - 1)]
 
   /*
-   * Scale the frame into a consistent 250 x 220 battle area while keeping
-   * its aspect ratio. The sprite sheet itself is never altered.
+   * Give every crop a tiny safety gutter. The supplied sheets place some
+   * frames very close together, so this prevents a neighbouring sprite or
+   * phase label from bleeding into the battle area.
    */
-  const scale = Math.min(240 / frame.width, 205 / frame.height)
-  const displayWidth = Math.max(1, frame.width * scale)
-  const displayHeight = Math.max(1, frame.height * scale)
+  const crop = Math.min(3, Math.floor(frame.width / 12), Math.floor(frame.height / 12))
+  const cropX = frame.x + crop
+  const cropY = frame.y + crop
+  const cropWidth = Math.max(1, frame.width - crop * 2)
+  const cropHeight = Math.max(1, frame.height - crop * 2)
+
+  /*
+   * Scale the cropped frame into a consistent 250 x 220 battle area while
+   * keeping its aspect ratio.
+   */
+  const scale = Math.min(240 / cropWidth, 205 / cropHeight)
+  const displayWidth = Math.max(1, cropWidth * scale)
+  const displayHeight = Math.max(1, cropHeight * scale)
 
   return (
     <div
@@ -927,11 +938,123 @@ function BeastSprite({
           position: 'absolute',
           width: beast.sheetWidth * scale,
           height: beast.sheetHeight * scale,
-          left: -frame.x * scale,
-          top: -frame.y * scale,
+          left: -cropX * scale,
+          top: -cropY * scale,
           backgroundImage: `url("${beast.sheet}")`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: `${beast.sheetWidth * scale}px ${beast.sheetHeight * scale}px`,
+          backgroundPosition: '0 0',
+        }}
+      />
+    </div>
+  )
+}
+
+const WIZARD_ANIMATIONS: Record<'idle' | 'attack' | 'hit' | 'victory' | 'special', SpriteFrame[]> = {
+  idle: [
+    { x: 168, y: 5, width: 154, height: 207, duration: 180 },
+    { x: 354, y: 5, width: 151, height: 207, duration: 180 },
+    { x: 539, y: 5, width: 151, height: 207, duration: 180 },
+    { x: 697, y: 5, width: 158, height: 207, duration: 180 },
+    { x: 879, y: 5, width: 155, height: 207, duration: 180 },
+    { x: 1051, y: 5, width: 158, height: 207, duration: 180 },
+    { x: 1226, y: 5, width: 154, height: 207, duration: 180 },
+  ],
+  attack: [
+    { x: 138, y: 208, width: 215, height: 198, duration: 120 },
+    { x: 382, y: 216, width: 250, height: 184, duration: 130 },
+    { x: 613, y: 214, width: 238, height: 188, duration: 140 },
+    { x: 842, y: 216, width: 250, height: 184, duration: 150 },
+    { x: 1065, y: 220, width: 245, height: 180, duration: 150 },
+    { x: 1300, y: 210, width: 235, height: 195, duration: 210 },
+  ],
+  hit: [
+    { x: 166, y: 408, width: 205, height: 190, duration: 100 },
+    { x: 385, y: 408, width: 245, height: 190, duration: 110 },
+    { x: 620, y: 420, width: 250, height: 180, duration: 110 },
+    { x: 865, y: 465, width: 250, height: 135, duration: 120 },
+    { x: 1100, y: 408, width: 185, height: 190, duration: 140 },
+  ],
+  victory: [
+    { x: 138, y: 594, width: 220, height: 220, duration: 170 },
+    { x: 360, y: 594, width: 240, height: 220, duration: 170 },
+    { x: 625, y: 594, width: 205, height: 220, duration: 170 },
+    { x: 800, y: 594, width: 250, height: 220, duration: 170 },
+    { x: 1095, y: 594, width: 215, height: 220, duration: 170 },
+  ],
+  special: [
+    { x: 0, y: 850, width: 500, height: 174, duration: 120 },
+    { x: 500, y: 850, width: 195, height: 174, duration: 100 },
+    { x: 695, y: 850, width: 180, height: 174, duration: 100 },
+    { x: 875, y: 850, width: 170, height: 174, duration: 100 },
+    { x: 1045, y: 850, width: 180, height: 174, duration: 120 },
+    { x: 1225, y: 790, width: 311, height: 234, duration: 170 },
+  ],
+}
+
+function WizardSprite({
+  animation,
+  playing = true,
+}: {
+  animation: keyof typeof WIZARD_ANIMATIONS
+  playing?: boolean
+}) {
+  const frames = WIZARD_ANIMATIONS[animation]
+  const [frameIndex, setFrameIndex] = useState(0)
+
+  useEffect(() => {
+    setFrameIndex(0)
+    if (!playing || frames.length <= 1) return
+
+    let cancelled = false
+    let timer: number | undefined
+
+    const advance = (index: number) => {
+      const duration = frames[index]?.duration ?? 160
+      timer = window.setTimeout(() => {
+        if (cancelled) return
+        const next = (index + 1) % frames.length
+        setFrameIndex(next)
+        advance(next)
+      }, duration)
+    }
+
+    advance(0)
+
+    return () => {
+      cancelled = true
+      if (timer) window.clearTimeout(timer)
+    }
+  }, [animation, frames, playing])
+
+  const frame = frames[Math.min(frameIndex, frames.length - 1)]
+  const scale = Math.min(210 / frame.width, 210 / frame.height)
+  const displayWidth = Math.max(1, frame.width * scale)
+  const displayHeight = Math.max(1, frame.height * scale)
+
+  return (
+    <div
+      aria-label="Wizard"
+      role="img"
+      style={{
+        width: displayWidth,
+        height: displayHeight,
+        overflow: 'hidden',
+        position: 'relative',
+        flex: '0 0 auto',
+        filter: 'drop-shadow(0 14px 18px rgba(0,0,0,.7))',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          width: 1536 * scale,
+          height: 1024 * scale,
+          left: -frame.x * scale,
+          top: -frame.y * scale,
+          backgroundImage: `url("${WIZARD_SHEET}")`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: `${1536 * scale}px ${1024 * scale}px`,
           backgroundPosition: '0 0',
         }}
       />
@@ -943,14 +1066,13 @@ export default function CavernCombat({
   questions,
   onComplete,
   assignmentTitle = 'Cavern Combat',
+  onExit,
 }: CavernCombatProps) {
   const safeQuestions = Array.isArray(questions) ? questions : []
 
   const [questionIndex, setQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
-  const [phase, setPhase] = useState<
-    'appearing' | 'question' | 'attacking' | 'hit' | 'defeated' | 'complete'
-  >('appearing')
+    const [phase, setPhase] = useState<GamePhase>('appearing')
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null)
 
@@ -968,8 +1090,7 @@ export default function CavernCombat({
    * question 11 -> beast 1 again
    */
   const beast = BEASTS[questionIndex % BEASTS.length]
-  const background =
-    BACKGROUNDS[Math.floor(questionIndex / 3) % BACKGROUNDS.length]
+  const background = GAMEPLAY_BACKDROP
 
   useEffect(() => {
     if (!question) return
@@ -1037,6 +1158,66 @@ export default function CavernCombat({
     )
   }
 
+  if (phase === 'complete') {
+    const accuracy = safeQuestions.length > 0
+      ? Math.round((score / safeQuestions.length) * 100)
+      : 0
+
+    return (
+      <div
+        className="cavern-combat"
+        style={{
+          ...styles.shell,
+          ...styles.finishShell,
+          backgroundImage: `linear-gradient(rgba(4, 5, 15, .28), rgba(4, 5, 15, .78)), url("${FINISH_BACKDROP}")`,
+        }}
+      >
+        <div style={styles.finishCard}>
+          <div style={styles.finishIcon}>
+            <WizardSprite animation="victory" playing={false} />
+          </div>
+          <div style={styles.finishKicker}>CAVERN ESCAPED</div>
+          <h1 style={styles.finishTitle}>YOU MADE IT OUT!</h1>
+          <p style={styles.finishText}>The cavern falls silent behind you.</p>
+
+          <div style={styles.finishStats}>
+            <div style={styles.finishStat}>
+              <span style={styles.finishStatLabel}>SCORE</span>
+              <strong style={styles.finishStatValue}>{score}/{safeQuestions.length}</strong>
+            </div>
+            <div style={styles.finishStat}>
+              <span style={styles.finishStatLabel}>ACCURACY</span>
+              <strong style={styles.finishStatValue}>{accuracy}%</strong>
+            </div>
+          </div>
+
+          <div style={styles.finishActions}>
+            <button
+              type="button"
+              onClick={() => {
+                setQuestionIndex(0)
+                setScore(0)
+                setSelectedIndex(null)
+                setLastCorrect(null)
+                setPhase('appearing')
+              }}
+              style={{ ...styles.finishButton, ...styles.finishPrimary }}
+            >
+              ⚔️ PLAY AGAIN
+            </button>
+            <button
+              type="button"
+              onClick={() => onExit?.()}
+              style={{ ...styles.finishButton, ...styles.finishSecondary }}
+            >
+              ← BACK TO DASHBOARD
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const handleAnswer = (choiceIndex: number) => {
     if (phase !== 'question' || selectedIndex !== null) return
 
@@ -1054,10 +1235,7 @@ export default function CavernCombat({
     }
   }
 
-  const progress =
-    ((questionIndex + (phase === 'complete' ? 1 : 0)) /
-      safeQuestions.length) *
-    100
+  const progress = ((questionIndex + 1) / safeQuestions.length) * 100
 
   const currentAnimation: keyof BeastAnimations =
     phase === 'appearing'
@@ -1175,7 +1353,17 @@ export default function CavernCombat({
                 phase === 'attacking' ? 'playerAttack .7s ease-in-out' : undefined,
             }}
           >
-            <div style={styles.playerEmoji}>🧙</div>
+            <div style={styles.playerSprite}>
+              <WizardSprite
+                animation={
+                  phase === 'attacking'
+    ? 'attack'
+    : phase === 'hit'
+      ? 'hit'
+      : 'idle'
+                }
+              />
+            </div>
             <div style={styles.playerLabel}>YOU</div>
           </div>
 
@@ -1400,9 +1588,13 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: .9,
   },
 
-  playerEmoji: {
-    fontSize: 76,
-    filter: 'drop-shadow(0 8px 12px rgba(0,0,0,.65))',
+  playerSprite: {
+    width: 210,
+    height: 210,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'visible',
   },
 
   playerLabel: {
@@ -1653,6 +1845,112 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 10,
     letterSpacing: 2,
     whiteSpace: 'nowrap',
+  },
+
+  finishShell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '40px 20px',
+  },
+
+  finishCard: {
+    width: 'min(680px, 100%)',
+    padding: '48px clamp(24px, 6vw, 64px)',
+    background: 'rgba(7, 6, 19, .9)',
+    border: '1px solid rgba(176, 155, 255, .48)',
+    boxShadow: '0 0 50px rgba(124, 92, 255, .18), 0 24px 70px rgba(0,0,0,.55)',
+    textAlign: 'center',
+    animation: 'cavernFadeIn .6s ease-out',
+  },
+
+  finishIcon: {
+    width: 210,
+    height: 180,
+    margin: '0 auto 12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'visible',
+  },
+
+  finishKicker: {
+    color: '#b9a2ff',
+    fontSize: 11,
+    letterSpacing: 4,
+    fontWeight: 900,
+  },
+
+  finishTitle: {
+    margin: '10px 0 8px',
+    fontSize: 'clamp(30px, 6vw, 54px)',
+    letterSpacing: 2,
+    textShadow: '0 0 18px rgba(186, 160, 255, .45)',
+  },
+
+  finishText: {
+    margin: 0,
+    color: '#aaa0c9',
+    fontSize: 13,
+  },
+
+  finishStats: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: 12,
+    margin: '30px auto',
+    maxWidth: 420,
+  },
+
+  finishStat: {
+    padding: '18px 12px',
+    border: '1px solid rgba(166, 139, 255, .28)',
+    background: 'rgba(15, 13, 34, .8)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+
+  finishStatLabel: {
+    color: '#8f83ac',
+    fontSize: 9,
+    letterSpacing: 3,
+    fontWeight: 900,
+  },
+
+  finishStatValue: {
+    color: '#f3eaff',
+    fontSize: 28,
+  },
+
+  finishActions: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+
+  finishButton: {
+    minWidth: 190,
+    minHeight: 48,
+    padding: '12px 18px',
+    cursor: 'pointer',
+    fontWeight: 900,
+    letterSpacing: 1.5,
+    transition: 'transform .15s ease, box-shadow .15s ease',
+  },
+
+  finishPrimary: {
+    border: '1px solid #b8a0ff',
+    background: 'rgba(124, 92, 255, .18)',
+    color: '#f3eaff',
+    boxShadow: '0 0 18px rgba(124, 92, 255, .2)',
+  },
+
+  finishSecondary: {
+    border: '1px solid rgba(176, 155, 255, .35)',
+    background: 'rgba(15, 13, 34, .75)',
+    color: '#b8add2',
   },
 
   empty: {
