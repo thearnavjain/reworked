@@ -5,6 +5,7 @@ export type CavernQuestion = {
   question?: string
   choices?: string[]
   options?: string[]
+  answer?: string | number
   correctAnswer?: string | number
   correct_answer?: string | number
 }
@@ -833,7 +834,7 @@ const getChoices = (q: CavernQuestion) =>
   q.choices ?? q.options ?? []
 
 const getCorrectIndex = (q: CavernQuestion, choices: string[]) => {
-  const answer = q.correctAnswer ?? q.correct_answer
+  const answer = q.correctAnswer ?? q.correct_answer ?? q.answer
 
   if (typeof answer === 'number') {
     return answer >= 0 && answer < choices.length ? answer : -1
