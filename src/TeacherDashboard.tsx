@@ -148,7 +148,7 @@ function UploadAssignment({ onAssignmentCreated }: { onAssignmentCreated: (assig
       formData.append('file', file)
 
       // 1. Upload the file and extract its text
-      const uploadResponse = await fetch('http://127.0.0.1:8000/upload', {
+      const uploadResponse = await fetch('https://reworked.onrender.com/upload', {
         method: 'POST',
         body: formData,
       })
@@ -161,7 +161,7 @@ function UploadAssignment({ onAssignmentCreated }: { onAssignmentCreated: (assig
 
       // 2. Send the extracted text to Gemini
       const questionResponse = await fetch(
-        'http://127.0.0.1:8000/generate-questions',
+        'https://reworked.onrender.com/generate-questions',
         {
           method: 'POST',
           headers: {
