@@ -824,9 +824,11 @@ const BEASTS: Beast[] = [
   CORRUPTED_NATURE_GUARDIAN,
 ]
 
-const GAMEPLAY_BACKDROP = '/assets/cavern/backgrounds/cavern-backdrop.png'
-const FINISH_BACKDROP = '/assets/cavern/backgrounds/cavern-escaped.png'
 const WIZARD_SHEET = '/assets/cavern/beasts/wizard.png'
+const CAVERN_BACKDROP = '/assets/cavern/backgrounds/cavern-backdrop.png'
+const CAVERN_ESCAPED = '/assets/cavern/backgrounds/cavern-escaped.png'
+
+const BACKGROUNDS = [CAVERN_BACKDROP]
 
 const getPrompt = (q: CavernQuestion) => q.prompt ?? q.question ?? ''
 
@@ -950,87 +952,90 @@ function BeastSprite({
   )
 }
 
-const WIZARD_ANIMATIONS: Record<'idle' | 'attack' | 'hit' | 'victory' | 'special', SpriteFrame[]> = {
+
+
+type WizardAnimation = 'idle' | 'attack' | 'hit' | 'victory'
+
+type WizardFrame = {
+  x: number
+  y: number
+  width: number
+  height: number
+  duration?: number
+}
+
+const WIZARD_ANIMATIONS: Record<WizardAnimation, WizardFrame[]> = {
+  // The label on the left of the sheet is intentionally excluded from every crop.
   idle: [
-    { x: 168, y: 5, width: 154, height: 207, duration: 180 },
-    { x: 354, y: 5, width: 151, height: 207, duration: 180 },
-    { x: 539, y: 5, width: 151, height: 207, duration: 180 },
-    { x: 697, y: 5, width: 158, height: 207, duration: 180 },
-    { x: 879, y: 5, width: 155, height: 207, duration: 180 },
-    { x: 1051, y: 5, width: 158, height: 207, duration: 180 },
-    { x: 1226, y: 5, width: 154, height: 207, duration: 180 },
+    { x: 165, y: 0, width: 180, height: 210, duration: 180 },
+    { x: 355, y: 0, width: 180, height: 210, duration: 180 },
+    { x: 550, y: 0, width: 185, height: 210, duration: 180 },
+    { x: 745, y: 0, width: 190, height: 210, duration: 180 },
+    { x: 940, y: 0, width: 185, height: 210, duration: 180 },
+    { x: 1130, y: 0, width: 190, height: 210, duration: 180 },
+    { x: 1320, y: 0, width: 195, height: 210, duration: 200 },
   ],
   attack: [
-    { x: 138, y: 208, width: 215, height: 198, duration: 120 },
-    { x: 382, y: 216, width: 250, height: 184, duration: 130 },
-    { x: 613, y: 214, width: 238, height: 188, duration: 140 },
-    { x: 842, y: 216, width: 250, height: 184, duration: 150 },
-    { x: 1065, y: 220, width: 245, height: 180, duration: 150 },
-    { x: 1300, y: 210, width: 235, height: 195, duration: 210 },
+    { x: 165, y: 210, width: 200, height: 195, duration: 120 },
+    { x: 385, y: 210, width: 190, height: 195, duration: 130 },
+    { x: 600, y: 210, width: 205, height: 195, duration: 140 },
+    { x: 820, y: 210, width: 205, height: 195, duration: 150 },
+    { x: 1045, y: 210, width: 205, height: 195, duration: 160 },
+    { x: 1270, y: 210, width: 265, height: 195, duration: 190 },
   ],
   hit: [
-    { x: 166, y: 408, width: 205, height: 190, duration: 100 },
-    { x: 385, y: 408, width: 245, height: 190, duration: 110 },
-    { x: 620, y: 420, width: 250, height: 180, duration: 110 },
-    { x: 865, y: 465, width: 250, height: 135, duration: 120 },
-    { x: 1100, y: 408, width: 185, height: 190, duration: 140 },
+    { x: 165, y: 405, width: 185, height: 195, duration: 110 },
+    { x: 385, y: 405, width: 190, height: 195, duration: 110 },
+    { x: 600, y: 405, width: 210, height: 195, duration: 120 },
+    { x: 850, y: 405, width: 220, height: 195, duration: 120 },
+    { x: 1115, y: 405, width: 190, height: 195, duration: 130 },
+    { x: 1320, y: 405, width: 190, height: 195, duration: 140 },
   ],
   victory: [
-    { x: 138, y: 594, width: 220, height: 220, duration: 170 },
-    { x: 360, y: 594, width: 240, height: 220, duration: 170 },
-    { x: 625, y: 594, width: 205, height: 220, duration: 170 },
-    { x: 800, y: 594, width: 250, height: 220, duration: 170 },
-    { x: 1095, y: 594, width: 215, height: 220, duration: 170 },
-  ],
-  special: [
-    { x: 0, y: 850, width: 500, height: 174, duration: 120 },
-    { x: 500, y: 850, width: 195, height: 174, duration: 100 },
-    { x: 695, y: 850, width: 180, height: 174, duration: 100 },
-    { x: 875, y: 850, width: 170, height: 174, duration: 100 },
-    { x: 1045, y: 850, width: 180, height: 174, duration: 120 },
-    { x: 1225, y: 790, width: 311, height: 234, duration: 170 },
+    { x: 160, y: 600, width: 210, height: 220, duration: 150 },
+    { x: 380, y: 600, width: 215, height: 220, duration: 150 },
+    { x: 635, y: 600, width: 220, height: 220, duration: 160 },
+    { x: 900, y: 600, width: 225, height: 220, duration: 170 },
+    { x: 1130, y: 600, width: 200, height: 220, duration: 200 },
   ],
 }
 
-function WizardSprite({
-  animation,
-  playing = true,
-}: {
-  animation: keyof typeof WIZARD_ANIMATIONS
-  playing?: boolean
-}) {
+function WizardSprite({ animation }: { animation: WizardAnimation }) {
   const frames = WIZARD_ANIMATIONS[animation]
   const [frameIndex, setFrameIndex] = useState(0)
 
   useEffect(() => {
     setFrameIndex(0)
-    if (!playing || frames.length <= 1) return
+    if (frames.length <= 1) return
 
     let cancelled = false
     let timer: number | undefined
 
     const advance = (index: number) => {
-      const duration = frames[index]?.duration ?? 160
       timer = window.setTimeout(() => {
         if (cancelled) return
         const next = (index + 1) % frames.length
         setFrameIndex(next)
         advance(next)
-      }, duration)
+      }, frames[index]?.duration ?? 160)
     }
 
     advance(0)
-
     return () => {
       cancelled = true
       if (timer) window.clearTimeout(timer)
     }
-  }, [animation, frames, playing])
+  }, [animation, frames])
 
   const frame = frames[Math.min(frameIndex, frames.length - 1)]
-  const scale = Math.min(210 / frame.width, 210 / frame.height)
-  const displayWidth = Math.max(1, frame.width * scale)
-  const displayHeight = Math.max(1, frame.height * scale)
+  const crop = 3
+  const cropX = frame.x + crop
+  const cropY = frame.y + crop
+  const cropWidth = Math.max(1, frame.width - crop * 2)
+  const cropHeight = Math.max(1, frame.height - crop * 2)
+  const scale = Math.min(190 / cropWidth, 205 / cropHeight)
+  const displayWidth = Math.max(1, cropWidth * scale)
+  const displayHeight = Math.max(1, cropHeight * scale)
 
   return (
     <div
@@ -1042,7 +1047,7 @@ function WizardSprite({
         overflow: 'hidden',
         position: 'relative',
         flex: '0 0 auto',
-        filter: 'drop-shadow(0 14px 18px rgba(0,0,0,.7))',
+        filter: 'drop-shadow(0 12px 16px rgba(0,0,0,.7))',
       }}
     >
       <div
@@ -1050,8 +1055,8 @@ function WizardSprite({
           position: 'absolute',
           width: 1536 * scale,
           height: 1024 * scale,
-          left: -frame.x * scale,
-          top: -frame.y * scale,
+          left: -cropX * scale,
+          top: -cropY * scale,
           backgroundImage: `url("${WIZARD_SHEET}")`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: `${1536 * scale}px ${1024 * scale}px`,
@@ -1090,7 +1095,8 @@ export default function CavernCombat({
    * question 11 -> beast 1 again
    */
   const beast = BEASTS[questionIndex % BEASTS.length]
-  const background = GAMEPLAY_BACKDROP
+  const background =
+    BACKGROUNDS[Math.floor(questionIndex / 3) % BACKGROUNDS.length]
 
   useEffect(() => {
     if (!question) return
@@ -1169,13 +1175,11 @@ export default function CavernCombat({
         style={{
           ...styles.shell,
           ...styles.finishShell,
-          backgroundImage: `linear-gradient(rgba(4, 5, 15, .28), rgba(4, 5, 15, .78)), url("${FINISH_BACKDROP}")`,
+          backgroundImage: `linear-gradient(rgba(4, 5, 15, .25), rgba(4, 5, 15, .82)), url("${CAVERN_ESCAPED}")`,
         }}
       >
         <div style={styles.finishCard}>
-          <div style={styles.finishIcon}>
-            <WizardSprite animation="victory" playing={false} />
-          </div>
+          <div style={styles.finishIcon}><WizardSprite animation="victory" /></div>
           <div style={styles.finishKicker}>CAVERN ESCAPED</div>
           <h1 style={styles.finishTitle}>YOU MADE IT OUT!</h1>
           <p style={styles.finishText}>The cavern falls silent behind you.</p>
@@ -1353,17 +1357,7 @@ export default function CavernCombat({
                 phase === 'attacking' ? 'playerAttack .7s ease-in-out' : undefined,
             }}
           >
-            <div style={styles.playerSprite}>
-              <WizardSprite
-                animation={
-                  phase === 'attacking'
-    ? 'attack'
-    : phase === 'hit'
-      ? 'hit'
-      : 'idle'
-                }
-              />
-            </div>
+            <div style={styles.playerSprite}><WizardSprite animation={phase === 'attacking' ? 'hit' : phase === 'hit' ? 'attack' : phase === 'defeated' ? 'victory' : 'idle'} /></div>
             <div style={styles.playerLabel}>YOU</div>
           </div>
 
@@ -1590,11 +1584,10 @@ const styles: Record<string, React.CSSProperties> = {
 
   playerSprite: {
     width: 210,
-    height: 210,
+    height: 220,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'visible',
   },
 
   playerLabel: {
@@ -1865,13 +1858,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   finishIcon: {
-    width: 210,
-    height: 180,
-    margin: '0 auto 12px',
+    height: 220,
+    marginBottom: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'visible',
   },
 
   finishKicker: {
