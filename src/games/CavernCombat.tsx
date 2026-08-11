@@ -79,31 +79,31 @@ const RADIOACTIVE_BAT: Beast = {
     // Three different bat poses across the top of the sheet.
     spawn: [
       { x: 0, y: 0, width: 500, height: 315, duration: 150 },
-      { x: 500, y: 0, width: 540, height: 315, duration: 150 },
-      { x: 1040, y: 0, width: 496, height: 315, duration: 180 },
+      { x: 0, y: 0, width: 500, height: 315, duration: 180 },
+      { x: 0, y: 0, width: 500, height: 315, duration: 180 },
     ],
 
     // Flying/hovering loop.
     idle: [
-      { x: 0, y: 0, width: 500, height: 315, duration: 180 },
-      { x: 500, y: 0, width: 540, height: 315, duration: 180 },
-      { x: 1040, y: 0, width: 496, height: 315, duration: 180 },
-      { x: 0, y: 315, width: 400, height: 285, duration: 180 },
+      { x: 1049, y: 0, width: 500, height: 315, duration: 180 },
+      { x: 0, y: 297, width: 400, height: 285, duration: 180 },
+      { x: 1049, y: 0, width: 500, height: 315, duration: 180 },
+      { x: 0, y: 297, width: 400, height: 285, duration: 180 },
     ],
 
     // Open-mouth attack poses and radioactive spit.
     attack: [
-      { x: 0, y: 585, width: 260, height: 220, duration: 130 },
-      { x: 260, y: 585, width: 510, height: 220, duration: 160 },
-      { x: 770, y: 585, width: 260, height: 180, duration: 120 },
-      { x: 1030, y: 585, width: 300, height: 180, duration: 140 },
+      { x: 0, y: 559, width: 260, height: 220, duration: 130 },
+      { x: 260, y: 572, width: 510, height: 220, duration: 160 },
+      { x: 280, y: 572, width: 510, height: 220, duration: 160 },
+      { x: 290, y: 572, width: 510, height: 220, duration: 160 },
     ],
 
     // Quick damage shake using the frontal poses.
     hit: [
-      { x: 0, y: 0, width: 500, height: 315, duration: 100 },
-      { x: 500, y: 0, width: 540, height: 315, duration: 100 },
-      { x: 0, y: 0, width: 500, height: 315, duration: 100 },
+      { x: 1049, y: 0, width: 500, height: 315, duration: 180 },
+      { x: 250, y: 778, width: 300, height: 315, duration: 100 },
+      { x: 1049, y: 0, width: 500, height: 315, duration: 180 },
     ],
 
     // Fallen/dead bat frames + radioactive residue.
@@ -115,10 +115,10 @@ const RADIOACTIVE_BAT: Beast = {
 
     // Radioactive projectile/effect frames.
     special: [
-      { x: 700, y: 585, width: 300, height: 190, duration: 110 },
-      { x: 900, y: 585, width: 320, height: 190, duration: 110 },
-      { x: 1120, y: 585, width: 300, height: 190, duration: 110 },
-      { x: 1320, y: 585, width: 216, height: 190, duration: 130 },
+      { x: 791, y: 612, width: 200, height: 140, duration: 110 },
+      { x: 971, y: 620, width: 200, height: 150, duration: 110 },
+      { x: 791, y: 612, width: 200, height: 140, duration: 110 },
+      { x: 971, y: 620, width: 200, height: 150, duration: 110 },
     ],
   },
 }
@@ -152,40 +152,40 @@ const CAVERN_SPIDER: Beast = {
       { x: 42, y: 28, width: 315, height: 285, duration: 150 },
       { x: 420, y: 18, width: 285, height: 330, duration: 150 },
       { x: 780, y: 70, width: 365, height: 275, duration: 170 },
-      { x: 1225, y: 30, width: 285, height: 310, duration: 190 },
+      { x: 42, y: 28, width: 315, height: 285, duration: 150 },
     ],
 
     idle: [
-      { x: 42, y: 28, width: 315, height: 285, duration: 180 },
-      { x: 420, y: 18, width: 285, height: 330, duration: 180 },
       { x: 780, y: 70, width: 365, height: 275, duration: 180 },
-      { x: 42, y: 390, width: 350, height: 235, duration: 180 },
-      { x: 430, y: 395, width: 350, height: 220, duration: 180 },
+      { x: 400, y: 390, width: 350, height: 235, duration: 180 },
+      { x: 780, y: 70, width: 365, height: 275, duration: 180 },
+      { x: 400, y: 390, width: 350, height: 235, duration: 180 },
+      { x: 780, y: 70, width: 365, height: 275, duration: 180 },
     ],
 
     attack: [
       { x: 820, y: 355, width: 355, height: 265, duration: 130 },
-      { x: 42, y: 390, width: 350, height: 235, duration: 130 },
       { x: 45, y: 625, width: 350, height: 155, duration: 120 },
-      { x: 835, y: 625, width: 300, height: 155, duration: 120 },
-      { x: 1135, y: 625, width: 180, height: 155, duration: 150 },
+      { x: 820, y: 355, width: 355, height: 265, duration: 130 },
+      { x: 45, y: 625, width: 350, height: 155, duration: 120 },
+      { x: 820, y: 355, width: 355, height: 265, duration: 130 },
     ],
 
     hit: [
+      { x: 780, y: 70, width: 365, height: 275, duration: 180 },
       { x: 820, y: 355, width: 355, height: 265, duration: 90 },
-      { x: 42, y: 28, width: 315, height: 285, duration: 90 },
-      { x: 820, y: 355, width: 355, height: 265, duration: 110 },
+      { x: 780, y: 70, width: 365, height: 275, duration: 180 },
     ],
 
     defeated: [
       { x: 40, y: 800, width: 315, height: 205, duration: 170 },
       { x: 375, y: 800, width: 285, height: 205, duration: 190 },
-      { x: 690, y: 800, width: 390, height: 205, duration: 230 },
+      { x: 40, y: 800, width: 315, height: 205, duration: 170 },
     ],
 
     special: [
-      { x: 835, y: 625, width: 300, height: 155, duration: 100 },
-      { x: 1120, y: 625, width: 195, height: 155, duration: 100 },
+      { x: 871, y: 625, width: 300, height: 155, duration: 100 },
+      { x: 1180, y: 625, width: 125, height: 155, duration: 100 },
       { x: 1335, y: 800, width: 180, height: 205, duration: 140 },
     ],
   },
@@ -212,49 +212,49 @@ const ONE_EYED_CRAWLER: Beast = {
     spawn: [
       { x: 12, y: 25, width: 305, height: 255, duration: 140 },
       { x: 335, y: 45, width: 325, height: 235, duration: 140 },
-      { x: 655, y: 65, width: 315, height: 220, duration: 160 },
-      { x: 970, y: 80, width: 305, height: 215, duration: 170 },
-      { x: 1280, y: 20, width: 250, height: 275, duration: 190 },
+      { x: 647, y: 57, width: 315, height: 220, duration: 160 },
+      { x: 335, y: 45, width: 325, height: 235, duration: 140 },
+      { x: 12, y: 25, width: 305, height: 255, duration: 140 },
     ],
 
     // Natural crawling/standing loop.
     idle: [
-      { x: 12, y: 25, width: 305, height: 255, duration: 180 },
+      { x: 645, y: 62, width: 315, height: 220, duration: 180 },
       { x: 335, y: 45, width: 325, height: 235, duration: 180 },
-      { x: 655, y: 65, width: 315, height: 220, duration: 180 },
-      { x: 12, y: 285, width: 390, height: 245, duration: 180 },
-      { x: 405, y: 285, width: 390, height: 245, duration: 180 },
+      { x: 645, y: 62, width: 315, height: 220, duration: 180 },
+      { x: 335, y: 45, width: 325, height: 235, duration: 180 },
+      { x: 645, y: 62, width: 315, height: 220, duration: 180 },
     ],
 
     // Lunge forward, then launch the eye projectile.
     attack: [
-      { x: 805, y: 285, width: 425, height: 265, duration: 130 },
-      { x: 15, y: 535, width: 345, height: 230, duration: 130 },
-      { x: 355, y: 530, width: 345, height: 235, duration: 140 },
-      { x: 690, y: 535, width: 300, height: 205, duration: 110 },
-      { x: 970, y: 535, width: 315, height: 205, duration: 110 },
+      { x: 784, y: 285, width: 425, height: 265, duration: 130 },
+      { x: 338, y: 530, width: 328, height: 235, duration: 140 },
+      { x: 784, y: 285, width: 425, height: 265, duration: 130 },
+      { x: 338, y: 530, width: 328, height: 235, duration: 140 },
+      { x: 784, y: 285, width: 425, height: 265, duration: 130 },
     ],
 
     // Quick recoil/flash sequence using the strongest frontal poses.
     hit: [
-      { x: 12, y: 25, width: 305, height: 255, duration: 90 },
-      { x: 335, y: 45, width: 325, height: 235, duration: 90 },
-      { x: 12, y: 25, width: 305, height: 255, duration: 110 },
+      { x: 645, y: 62, width: 315, height: 220, duration: 180 },
+      { x: 964, y: 62, width: 315, height: 220, duration: 180 },
+      { x: 645, y: 62, width: 315, height: 220, duration: 180 },
     ],
 
     // Fallen crawler, then the collapsed remains / hole-like defeat effect.
     defeated: [
       { x: 15, y: 775, width: 385, height: 245, duration: 170 },
-      { x: 390, y: 780, width: 400, height: 225, duration: 190 },
-      { x: 780, y: 760, width: 300, height: 265, duration: 220 },
-      { x: 1060, y: 760, width: 300, height: 265, duration: 240 },
+      { x: 390, y: 780, width: 373, height: 225, duration: 190 },
+      { x: 770, y: 760, width: 300, height: 265, duration: 220 },
+      { x: 1071, y: 760, width: 300, height: 265, duration: 240 },
     ],
 
     // Eye/projectile sequence unique to the One-Eyed Crawler.
     special: [
-      { x: 690, y: 535, width: 300, height: 205, duration: 100 },
+      { x: 648, y: 535, width: 250, height: 205, duration: 100 },
       { x: 965, y: 535, width: 315, height: 205, duration: 100 },
-      { x: 1280, y: 535, width: 255, height: 230, duration: 130 },
+      { x: 1005, y: 535, width: 160, height: 205, duration: 100 },
       { x: 1380, y: 760, width: 150, height: 260, duration: 150 },
     ],
   },
@@ -279,61 +279,61 @@ const PURPLE_CAVE_SCORPION: Beast = {
   animations: {
     // Crystal mound emergence, then the scorpion fully rises.
     spawn: [
-      { x: 18, y: 35, width: 185, height: 145, duration: 150 },
+      { x: 18, y: 40, width: 185, height: 136, duration: 150 },
       { x: 215, y: 28, width: 220, height: 155, duration: 150 },
       { x: 455, y: 25, width: 225, height: 160, duration: 150 },
       { x: 700, y: 20, width: 255, height: 165, duration: 170 },
-      { x: 990, y: 15, width: 230, height: 170, duration: 180 },
+      { x: 990, y: 6, width: 230, height: 179, duration: 180 },
       { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
     ],
 
     // Six-frame idle/crawling loop.
     idle: [
-      { x: 8, y: 205, width: 190, height: 145, duration: 180 },
-      { x: 210, y: 200, width: 190, height: 150, duration: 180 },
-      { x: 420, y: 200, width: 195, height: 150, duration: 180 },
-      { x: 630, y: 195, width: 205, height: 155, duration: 180 },
-      { x: 850, y: 195, width: 205, height: 155, duration: 180 },
-      { x: 1080, y: 195, width: 210, height: 155, duration: 180 },
-      { x: 1290, y: 195, width: 225, height: 155, duration: 180 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
+      { x: 990, y: 6, width: 230, height: 179, duration: 180 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
+      { x: 990, y: 6, width: 230, height: 179, duration: 180 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
+      { x: 990, y: 6, width: 230, height: 179, duration: 180 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
     ],
 
     // Claw/mouth attack poses followed by the charged attack pose.
     attack: [
-      { x: 8, y: 375, width: 185, height: 155, duration: 130 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
       { x: 205, y: 370, width: 185, height: 160, duration: 130 },
-      { x: 405, y: 365, width: 195, height: 165, duration: 140 },
-      { x: 625, y: 365, width: 225, height: 165, duration: 150 },
+      { x: 604, y: 365, width: 225, height: 165, duration: 150 },
       { x: 850, y: 360, width: 270, height: 175, duration: 170 },
+      { x: 1200, y: 360, width: 270, height: 175, duration: 170 },
     ],
 
     // Recoil poses from the dedicated HIT (DAMAGED) band.
     hit: [
-      { x: 8, y: 555, width: 195, height: 150, duration: 90 },
-      { x: 225, y: 550, width: 195, height: 155, duration: 90 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
+      { x: 477, y: 550, width: 225, height: 155, duration: 100 },
       { x: 450, y: 550, width: 225, height: 155, duration: 100 },
-      { x: 715, y: 550, width: 235, height: 155, duration: 110 },
-      { x: 980, y: 550, width: 245, height: 155, duration: 100 },
-      { x: 1260, y: 550, width: 250, height: 160, duration: 120 },
+      { x: 994, y: 550, width: 245, height: 155, duration: 100 },
+      { x: 477, y: 550, width: 225, height: 155, duration: 100 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
     ],
 
     // Collapsed scorpion and crystal-covered remains.
     defeated: [
-      { x: 8, y: 720, width: 250, height: 150, duration: 170 },
-      { x: 275, y: 720, width: 245, height: 150, duration: 180 },
-      { x: 535, y: 720, width: 230, height: 150, duration: 190 },
-      { x: 780, y: 720, width: 235, height: 150, duration: 210 },
-      { x: 1030, y: 720, width: 250, height: 150, duration: 220 },
-      { x: 1290, y: 720, width: 225, height: 150, duration: 250 },
+      { x: 994, y: 550, width: 245, height: 155, duration: 100 },
+      { x: 477, y: 550, width: 225, height: 155, duration: 100 },
+      { x: 1250, y: 10, width: 260, height: 180, duration: 200 },
+      { x: 1009, y: 707, width: 250, height: 150, duration: 220 },
+      { x: 1290, y: 700, width: 225, height: 150, duration: 250 },
+      { x: 1009, y: 707, width: 250, height: 150, duration: 220 },
     ],
 
     // Purple projectile travel followed by the crystal impact/explosion.
     special: [
       { x: 8, y: 875, width: 400, height: 145, duration: 120 },
-      { x: 425, y: 900, width: 180, height: 115, duration: 100 },
+      { x: 425, y: 900, width: 144, height: 115, duration: 100 },
       { x: 610, y: 900, width: 180, height: 115, duration: 100 },
-      { x: 795, y: 900, width: 180, height: 115, duration: 110 },
-      { x: 975, y: 865, width: 150, height: 155, duration: 130 },
+      { x: 425, y: 900, width: 144, height: 115, duration: 100 },
+      { x: 795, y: 900, width: 155, height: 115, duration: 110 },
       { x: 1140, y: 865, width: 190, height: 155, duration: 150 },
       { x: 1350, y: 865, width: 175, height: 155, duration: 170 },
     ],
@@ -360,58 +360,58 @@ const STONE_SERPENT: Beast = {
       { x: 10, y: 42, width: 180, height: 140, duration: 140 },
       { x: 195, y: 42, width: 190, height: 140, duration: 140 },
       { x: 390, y: 35, width: 200, height: 150, duration: 150 },
-      { x: 595, y: 15, width: 215, height: 170, duration: 160 },
-      { x: 815, y: 25, width: 205, height: 160, duration: 170 },
-      { x: 1020, y: 15, width: 225, height: 170, duration: 190 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
     ],
 
     // Coiled breathing/movement loop.
     idle: [
-      { x: 8, y: 195, width: 205, height: 155, duration: 180 },
-      { x: 220, y: 190, width: 215, height: 160, duration: 180 },
-      { x: 445, y: 190, width: 220, height: 160, duration: 180 },
-      { x: 675, y: 190, width: 225, height: 160, duration: 180 },
-      { x: 910, y: 190, width: 220, height: 160, duration: 180 },
-      { x: 1135, y: 190, width: 205, height: 160, duration: 180 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
+      { x: 899, y: 196, width: 218, height: 160, duration: 180 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
+      { x: 899, y: 196, width: 218, height: 160, duration: 180 },
+      { x: 595, y: 6, width: 206, height: 173, duration: 160 },
+      { x: 899, y: 196, width: 218, height: 160, duration: 180 },
     ],
 
     // Forward lunge / bite sequence.
     attack: [
-      { x: 8, y: 365, width: 245, height: 165, duration: 120 },
-      { x: 275, y: 365, width: 275, height: 165, duration: 130 },
-      { x: 570, y: 360, width: 275, height: 175, duration: 140 },
-      { x: 850, y: 350, width: 315, height: 185, duration: 150 },
-      { x: 1185, y: 350, width: 235, height: 185, duration: 170 },
+      { x: 325, y: 365, width: 267, height: 165, duration: 130 },
+      { x: 589, y: 360, width: 265, height: 175, duration: 140 },
+      { x: 870, y: 355, width: 345, height: 175, duration: 150 },
+      { x: 589, y: 360, width: 265, height: 175, duration: 140 },
+      { x: 870, y: 355, width: 345, height: 175, duration: 150 },
     ],
 
     // Dedicated damaged poses.
     hit: [
-      { x: 8, y: 535, width: 325, height: 165, duration: 90 },
-      { x: 345, y: 535, width: 255, height: 165, duration: 90 },
-      { x: 610, y: 535, width: 255, height: 165, duration: 100 },
-      { x: 875, y: 535, width: 255, height: 165, duration: 105 },
-      { x: 1140, y: 535, width: 180, height: 165, duration: 120 },
+      { x: 750, y: 527, width: 233, height: 165, duration: 105 },
+      { x: 987, y: 535, width: 188, height: 165, duration: 120 },
+      { x: 750, y: 527, width: 233, height: 165, duration: 105 },
+      { x: 987, y: 535, width: 188, height: 165, duration: 120 },
+      { x: 750, y: 527, width: 233, height: 165, duration: 105 },
     ],
 
     // Collapse into stone/crystal remains.
     defeated: [
-      { x: 8, y: 705, width: 295, height: 150, duration: 170 },
-      { x: 315, y: 705, width: 245, height: 150, duration: 180 },
-      { x: 570, y: 705, width: 250, height: 150, duration: 190 },
-      { x: 825, y: 705, width: 255, height: 150, duration: 210 },
-      { x: 1090, y: 705, width: 225, height: 150, duration: 220 },
-      { x: 1320, y: 690, width: 210, height: 165, duration: 250 },
+      { x: 8, y: 732, width: 250, height: 100, duration: 170 },
+      { x: 268, y: 690, width: 245, height: 150, duration: 180 },
+      { x: 527, y: 702, width: 263, height: 150, duration: 190 },
+      { x: 825, y: 705, width: 255, height: 127, duration: 210 },
+      { x: 1090, y: 705, width: 225, height: 135, duration: 220 },
+      { x: 1303, y: 664, width: 210, height: 166, duration: 250 },
     ],
 
     // Blue stone projectile travel followed by crystal impact frames.
     special: [
-      { x: 8, y: 875, width: 390, height: 145, duration: 120 },
+      { x: 8, y: 875, width: 375, height: 145, duration: 120 },
       { x: 405, y: 895, width: 175, height: 125, duration: 100 },
-      { x: 585, y: 895, width: 175, height: 125, duration: 100 },
-      { x: 765, y: 895, width: 175, height: 125, duration: 105 },
-      { x: 945, y: 895, width: 175, height: 125, duration: 110 },
-      { x: 1125, y: 860, width: 205, height: 160, duration: 140 },
-      { x: 1335, y: 860, width: 195, height: 160, duration: 170 },
+      { x: 387, y: 886, width: 123, height: 119, duration: 100 },
+      { x: 875, y: 827, width: 235, height: 200, duration: 110 },
+      { x: 1112, y: 860, width: 173, height: 160, duration: 140 },
+      { x: 875, y: 827, width: 235, height: 200, duration: 110 },
+      { x: 1302, y: 850, width: 207, height: 163, duration: 170 },
     ],
   },
 }
@@ -437,47 +437,47 @@ const YELLOW_GLOWWORM_BEAST: Beast = {
   animations: {
     // Emerges from the glowing cave mound and rises into its full form.
     spawn: [
-      { x: 10, y: 35, width: 185, height: 155, duration: 140 },
-      { x: 195, y: 35, width: 185, height: 155, duration: 140 },
-      { x: 385, y: 25, width: 175, height: 165, duration: 150 },
-      { x: 565, y: 18, width: 195, height: 175, duration: 160 },
-      { x: 765, y: 12, width: 205, height: 180, duration: 170 },
-      { x: 975, y: 8, width: 270, height: 185, duration: 190 },
+      { x: 10, y: 45, width: 185, height: 155, duration: 140 },
+      { x: 195, y: 45, width: 164, height: 155, duration: 140 },
+      { x: 363, y: 25, width: 175, height: 172, duration: 150 },
+      { x: 541, y: 18, width: 195, height: 175, duration: 160 },
+      { x: 730, y: 18, width: 226, height: 180, duration: 170 },
+      { x: 959, y: 8, width: 280, height: 203, duration: 190 },
     ],
 
     // Five-frame glowing crawl/breathing loop.
     idle: [
-      { x: 8, y: 210, width: 250, height: 175, duration: 180 },
-      { x: 265, y: 210, width: 250, height: 175, duration: 180 },
-      { x: 520, y: 210, width: 250, height: 175, duration: 180 },
-      { x: 775, y: 210, width: 250, height: 175, duration: 180 },
-      { x: 1030, y: 205, width: 220, height: 180, duration: 200 },
+      { x: 534, y: 210, width: 209, height: 175, duration: 180 },
+      { x: 507, y: 210, width: 250, height: 175, duration: 180 },
+      { x: 534, y: 210, width: 209, height: 175, duration: 180 },
+      { x: 507, y: 210, width: 250, height: 175, duration: 180 },
+      { x: 534, y: 210, width: 209, height: 175, duration: 180 },
     ],
 
     // Forward lunge / mouth attack poses.
     attack: [
-      { x: 8, y: 405, width: 285, height: 180, duration: 130 },
-      { x: 300, y: 405, width: 285, height: 180, duration: 130 },
-      { x: 595, y: 395, width: 300, height: 190, duration: 150 },
-      { x: 905, y: 405, width: 335, height: 180, duration: 170 },
+      { x: 600, y: 405, width: 308, height: 180, duration: 130 },
+      { x: 915, y: 405, width: 333, height: 180, duration: 170 },
+      { x: 600, y: 405, width: 308, height: 180, duration: 130 },
+      { x: 915, y: 405, width: 333, height: 180, duration: 170 },
     ],
 
     // Dedicated damaged/recoil poses.
     hit: [
-      { x: 8, y: 620, width: 245, height: 175, duration: 90 },
-      { x: 265, y: 620, width: 250, height: 175, duration: 90 },
-      { x: 525, y: 615, width: 255, height: 180, duration: 100 },
-      { x: 790, y: 615, width: 250, height: 180, duration: 105 },
-      { x: 1050, y: 610, width: 195, height: 185, duration: 120 },
+      { x: 554, y: 615, width: 255, height: 180, duration: 100 },
+      { x: 1000, y: 650, width: 250, height: 185, duration: 120 },
+      { x: 554, y: 615, width: 255, height: 180, duration: 100 },
+      { x: 1000, y: 650, width: 250, height: 185, duration: 120 },
+      { x: 554, y: 615, width: 255, height: 180, duration: 100 },
     ],
 
     // Collapse, dissolve, and leave behind a glowing cave mound.
     defeated: [
-      { x: 8, y: 815, width: 250, height: 175, duration: 170 },
+      { x: 8, y: 842, width: 250, height: 153, duration: 170 },
       { x: 270, y: 815, width: 250, height: 175, duration: 180 },
       { x: 530, y: 815, width: 255, height: 175, duration: 190 },
       { x: 795, y: 815, width: 245, height: 175, duration: 210 },
-      { x: 1050, y: 810, width: 195, height: 180, duration: 250 },
+      { x: 1036, y: 818, width: 195, height: 173, duration: 250 },
     ],
 
     // Glowworm projectile travel followed by yellow impact/effect frames.
@@ -514,59 +514,59 @@ const MAGMA_LIZARD: Beast = {
   animations: {
     // Six-frame emergence from a magma/crystal mound.
     spawn: [
-      { x: 12, y: 38, width: 180, height: 150, duration: 140 },
+      { x: 12, y: 46, width: 180, height: 137, duration: 140 },
       { x: 205, y: 35, width: 180, height: 150, duration: 140 },
-      { x: 395, y: 28, width: 190, height: 160, duration: 150 },
-      { x: 595, y: 20, width: 205, height: 170, duration: 160 },
-      { x: 810, y: 18, width: 235, height: 172, duration: 170 },
-      { x: 1045, y: 12, width: 265, height: 180, duration: 190 },
+      { x: 387, y: 28, width: 190, height: 160, duration: 150 },
+      { x: 577, y: 20, width: 205, height: 170, duration: 160 },
+      { x: 810, y: 18, width: 199, height: 172, duration: 170 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
     ],
 
     // Five-frame fiery breathing/crawling loop.
     idle: [
-      { x: 10, y: 210, width: 275, height: 165, duration: 180 },
-      { x: 300, y: 210, width: 275, height: 165, duration: 180 },
-      { x: 590, y: 205, width: 285, height: 170, duration: 180 },
-      { x: 890, y: 205, width: 285, height: 170, duration: 180 },
-      { x: 1190, y: 205, width: 330, height: 170, duration: 200 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
+      { x: 1218, y: 205, width: 315, height: 170, duration: 200 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
+      { x: 1218, y: 205, width: 315, height: 170, duration: 200 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
     ],
 
     // Bite/lunge sequence, ending with the long fire-breath frame.
     attack: [
-      { x: 10, y: 385, width: 300, height: 170, duration: 120 },
-      { x: 315, y: 385, width: 300, height: 170, duration: 130 },
-      { x: 620, y: 375, width: 305, height: 180, duration: 140 },
-      { x: 930, y: 375, width: 300, height: 180, duration: 150 },
-      { x: 1235, y: 365, width: 300, height: 190, duration: 210 },
+      { x: 923, y: 365, width: 600, height: 190, duration: 210 },
+      { x: 953, y: 365, width: 600, height: 190, duration: 210 },
+      { x: 983, y: 365, width: 600, height: 190, duration: 210 },
+      { x: 1013, y: 365, width: 600, height: 190, duration: 210 },
+      { x: 1053, y: 365, width: 600, height: 190, duration: 210 },
     ],
 
     // Dedicated damaged/recoil poses.
     hit: [
-      { x: 10, y: 555, width: 285, height: 155, duration: 90 },
-      { x: 305, y: 550, width: 285, height: 160, duration: 90 },
-      { x: 600, y: 545, width: 300, height: 165, duration: 100 },
-      { x: 915, y: 545, width: 300, height: 165, duration: 105 },
-      { x: 1230, y: 545, width: 300, height: 165, duration: 120 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
+      { x: 780, y: 545, width: 281, height: 165, duration: 105 },
+      { x: 607, y: 542, width: 150, height: 165, duration: 100 },
+      { x: 780, y: 545, width: 281, height: 165, duration: 105 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
     ],
 
     // Collapse into a smoldering body, then a fading magma mound.
     defeated: [
-      { x: 10, y: 720, width: 275, height: 150, duration: 170 },
-      { x: 300, y: 720, width: 275, height: 150, duration: 180 },
-      { x: 590, y: 715, width: 275, height: 155, duration: 190 },
-      { x: 880, y: 715, width: 275, height: 155, duration: 210 },
-      { x: 1170, y: 715, width: 345, height: 155, duration: 250 },
+      { x: 1234, y: 12, width: 282, height: 180, duration: 190 },
+      { x: 510, y: 715, width: 266, height: 155, duration: 190 },
+      { x: 760, y: 715, width: 269, height: 135, duration: 210 },
+      { x: 1020, y: 715, width: 225, height: 108, duration: 210 },
+      { x: 1240, y: 715, width: 262, height: 112, duration: 250 },
     ],
 
     // Fire projectile travel followed by fiery crater/impact effects.
     special: [
       { x: 10, y: 875, width: 430, height: 145, duration: 120 },
-      { x: 450, y: 885, width: 150, height: 120, duration: 95 },
-      { x: 610, y: 885, width: 150, height: 120, duration: 95 },
-      { x: 770, y: 885, width: 150, height: 120, duration: 100 },
-      { x: 930, y: 875, width: 200, height: 145, duration: 120 },
-      { x: 1135, y: 855, width: 190, height: 165, duration: 140 },
-      { x: 1330, y: 855, width: 195, height: 165, duration: 170 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
+      { x: 10, y: 875, width: 430, height: 145, duration: 120 },
     ],
   },
 }
@@ -592,61 +592,61 @@ const PINK_ROCK_GOBLIN: Beast = {
   animations: {
     // Crystal mound opens and the goblin climbs out.
     spawn: [
-      { x: 8, y: 35, width: 195, height: 180, duration: 140 },
-      { x: 210, y: 35, width: 205, height: 180, duration: 140 },
-      { x: 425, y: 25, width: 205, height: 190, duration: 150 },
-      { x: 640, y: 20, width: 210, height: 195, duration: 160 },
-      { x: 860, y: 18, width: 205, height: 200, duration: 170 },
-      { x: 1070, y: 5, width: 175, height: 215, duration: 190 },
+      { x: 8, y: 50, width: 195, height: 180, duration: 140 },
+      { x: 232, y: 53, width: 205, height: 180, duration: 140 },
+      { x: 447, y: 25, width: 205, height: 213, duration: 150 },
+      { x: 647, y: 34, width: 210, height: 195, duration: 160 },
+      { x: 860, y: 32, width: 205, height: 200, duration: 170 },
+      { x: 1064, y: 19, width: 175, height: 215, duration: 190 },
     ],
 
     // Six-frame idle breathing/menacing loop.
     idle: [
-      { x: 8, y: 235, width: 195, height: 190, duration: 180 },
-      { x: 220, y: 235, width: 195, height: 190, duration: 180 },
-      { x: 430, y: 235, width: 195, height: 190, duration: 180 },
-      { x: 640, y: 235, width: 195, height: 190, duration: 180 },
-      { x: 850, y: 235, width: 195, height: 190, duration: 180 },
-      { x: 1060, y: 230, width: 190, height: 200, duration: 200 },
+      { x: 1064, y: 19, width: 175, height: 215, duration: 190 },
+      { x: 220, y: 243, width: 195, height: 190, duration: 180 },
+      { x: 1064, y: 19, width: 175, height: 215, duration: 190 },
+      { x: 220, y: 243, width: 195, height: 190, duration: 180 },
+      { x: 1064, y: 19, width: 175, height: 215, duration: 190 },
+      { x: 220, y: 243, width: 195, height: 190, duration: 180 },
     ],
 
     // Goblin charges, swings, then unleashes the large pink rock wave.
     attack: [
-      { x: 8, y: 445, width: 205, height: 185, duration: 120 },
-      { x: 220, y: 445, width: 205, height: 185, duration: 130 },
-      { x: 435, y: 440, width: 210, height: 190, duration: 140 },
-      { x: 650, y: 435, width: 215, height: 195, duration: 150 },
-      { x: 870, y: 430, width: 370, height: 205, duration: 220 },
+      { x: 1064, y: 19, width: 175, height: 215, duration: 190 },
+      { x: 225, y: 460, width: 196, height: 185, duration: 130 },
+      { x: 424, y: 452, width: 210, height: 193, duration: 140 },
+      { x: 225, y: 460, width: 196, height: 185, duration: 130 },
+      { x: 870, y: 461, width: 370, height: 205, duration: 220 },
     ],
 
     // Dedicated damaged/recoil poses.
     hit: [
-      { x: 8, y: 650, width: 205, height: 185, duration: 90 },
-      { x: 220, y: 645, width: 205, height: 190, duration: 90 },
-      { x: 435, y: 645, width: 205, height: 190, duration: 100 },
+      { x: 8, y: 445, width: 205, height: 185, duration: 120 },
+      { x: 8, y: 684, width: 205, height: 166, duration: 90 },
+      { x: 435, y: 665, width: 205, height: 190, duration: 100 },
       { x: 650, y: 640, width: 215, height: 195, duration: 105 },
-      { x: 875, y: 640, width: 205, height: 195, duration: 115 },
-      { x: 1085, y: 635, width: 160, height: 200, duration: 125 },
+      { x: 8, y: 684, width: 205, height: 166, duration: 90 },
+      { x: 435, y: 665, width: 205, height: 190, duration: 100 },
     ],
 
     // Goblin collapses, then becomes a pink crystal mound.
     defeated: [
-      { x: 8, y: 850, width: 205, height: 165, duration: 170 },
-      { x: 220, y: 850, width: 205, height: 165, duration: 180 },
-      { x: 435, y: 850, width: 210, height: 165, duration: 190 },
-      { x: 650, y: 850, width: 205, height: 165, duration: 210 },
-      { x: 865, y: 850, width: 190, height: 165, duration: 220 },
+      { x: 8, y: 445, width: 205, height: 185, duration: 120 },
+      { x: 19, y: 900, width: 205, height: 113, duration: 170 },
+      { x: 231, y: 850, width: 205, height: 165, duration: 180 },
+      { x: 448, y: 850, width: 228, height: 165, duration: 190 },
+      { x: 683, y: 859, width: 205, height: 162, duration: 210 },
       { x: 1065, y: 850, width: 180, height: 165, duration: 250 },
     ],
 
     // Pink energy/rock projectile travel followed by crystal impact.
     special: [
-      { x: 8, y: 1040, width: 300, height: 205, duration: 120 },
-      { x: 315, y: 1050, width: 175, height: 170, duration: 95 },
-      { x: 500, y: 1050, width: 175, height: 170, duration: 95 },
-      { x: 685, y: 1050, width: 175, height: 170, duration: 100 },
-      { x: 870, y: 1040, width: 180, height: 205, duration: 140 },
-      { x: 1060, y: 1040, width: 185, height: 205, duration: 170 },
+      { x: 8, y: 1064, width: 400, height: 196, duration: 120 },
+      { x: 8, y: 1064, width: 700, height: 196, duration: 120 },
+      { x: 8, y: 1064, width: 400, height: 196, duration: 120 },
+      { x: 8, y: 1064, width: 700, height: 196, duration: 120 },
+      { x: 8, y: 1064, width: 400, height: 196, duration: 120 },
+      { x: 8, y: 1064, width: 700, height: 196, duration: 120 },
     ],
   },
 }
@@ -671,63 +671,63 @@ const ICE_TIGER: Beast = {
   animations: {
     // Crystal mound -> spectral tiger -> fully emerged tiger.
     spawn: [
-      { x: 8, y: 32, width: 165, height: 145, duration: 140 },
+      { x: 8, y: 43, width: 165, height: 122, duration: 140 },
       { x: 185, y: 30, width: 175, height: 145, duration: 140 },
-      { x: 370, y: 25, width: 185, height: 150, duration: 150 },
-      { x: 565, y: 20, width: 215, height: 160, duration: 160 },
-      { x: 795, y: 10, width: 255, height: 175, duration: 175 },
-      { x: 1065, y: 5, width: 225, height: 180, duration: 185 },
-      { x: 1300, y: 0, width: 230, height: 190, duration: 200 },
+      { x: 370, y: 9, width: 218, height: 158, duration: 150 },
+      { x: 599, y: 10, width: 215, height: 160, duration: 160 },
+      { x: 816, y: 10, width: 255, height: 175, duration: 175 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 1305, y: 0, width: 227, height: 183, duration: 200 },
     ],
 
     // Six-frame icy stalking loop.
     idle: [
-      { x: 10, y: 190, width: 300, height: 155, duration: 180 },
-      { x: 320, y: 190, width: 260, height: 155, duration: 180 },
-      { x: 590, y: 190, width: 250, height: 155, duration: 180 },
-      { x: 850, y: 190, width: 245, height: 155, duration: 180 },
-      { x: 1105, y: 190, width: 185, height: 155, duration: 180 },
-      { x: 1300, y: 185, width: 225, height: 165, duration: 200 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 1305, y: 0, width: 227, height: 183, duration: 200 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 1305, y: 0, width: 227, height: 183, duration: 200 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 1305, y: 0, width: 227, height: 183, duration: 200 },
     ],
 
     // Leap/lunge sequence ending in the sweeping ice attack.
     attack: [
-      { x: 8, y: 355, width: 300, height: 155, duration: 120 },
-      { x: 320, y: 350, width: 275, height: 160, duration: 130 },
-      { x: 605, y: 345, width: 285, height: 165, duration: 140 },
-      { x: 900, y: 345, width: 290, height: 170, duration: 150 },
-      { x: 1195, y: 335, width: 335, height: 180, duration: 210 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 316, y: 344, width: 275, height: 160, duration: 130 },
+      { x: 600, y: 345, width: 285, height: 165, duration: 140 },
+      { x: 885, y: 345, width: 304, height: 204, duration: 150 },
+      { x: 1189, y: 335, width: 340, height: 180, duration: 210 },
     ],
 
     // Dedicated damaged/recoil poses.
     hit: [
-      { x: 8, y: 525, width: 275, height: 165, duration: 90 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
       { x: 295, y: 525, width: 270, height: 165, duration: 90 },
       { x: 575, y: 520, width: 260, height: 170, duration: 100 },
-      { x: 850, y: 520, width: 265, height: 170, duration: 105 },
+      { x: 1035, y: 554, width: 237, height: 161, duration: 115 },
       { x: 1125, y: 515, width: 205, height: 175, duration: 115 },
-      { x: 1340, y: 515, width: 195, height: 175, duration: 125 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
     ],
 
     // Tiger collapses, freezes, and leaves an ice/crystal mound behind.
     defeated: [
-      { x: 8, y: 705, width: 280, height: 145, duration: 170 },
-      { x: 295, y: 705, width: 270, height: 145, duration: 180 },
-      { x: 575, y: 705, width: 260, height: 145, duration: 190 },
-      { x: 850, y: 705, width: 245, height: 145, duration: 210 },
-      { x: 1110, y: 705, width: 230, height: 145, duration: 225 },
-      { x: 1350, y: 700, width: 180, height: 150, duration: 250 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 274, y: 705, width: 251, height: 145, duration: 180 },
+      { x: 535, y: 705, width: 272, height: 145, duration: 190 },
+      { x: 274, y: 705, width: 251, height: 145, duration: 180 },
+      { x: 820, y: 705, width: 230, height: 145, duration: 210 },
+      { x: 1275, y: 700, width: 250, height: 150, duration: 250 },
     ],
 
     // Ice projectile travel followed by crystalline impact/explosion.
     special: [
-      { x: 8, y: 865, width: 435, height: 155, duration: 120 },
-      { x: 455, y: 875, width: 205, height: 145, duration: 95 },
+      { x: 1071, y: 0, width: 240, height: 181, duration: 185 },
+      { x: 7, y: 885, width: 427, height: 132, duration: 120 },
       { x: 670, y: 875, width: 165, height: 145, duration: 95 },
-      { x: 845, y: 875, width: 145, height: 145, duration: 100 },
-      { x: 1000, y: 875, width: 125, height: 145, duration: 110 },
-      { x: 1140, y: 855, width: 225, height: 165, duration: 140 },
-      { x: 1375, y: 855, width: 160, height: 165, duration: 170 },
+      { x: 7, y: 885, width: 580, height: 132, duration: 120 },
+      { x: 670, y: 875, width: 165, height: 145, duration: 95 },
+      { x: 7, y: 885, width: 580, height: 132, duration: 120 },
+      { x: 670, y: 875, width: 165, height: 145, duration: 95 },
     ],
   },
 }
@@ -752,61 +752,61 @@ const CORRUPTED_NATURE_GUARDIAN: Beast = {
   animations: {
     // Corrupted crystal growth -> guardian rises out of the cavern.
     spawn: [
-      { x: 5, y: 30, width: 190, height: 185, duration: 140 },
-      { x: 165, y: 25, width: 225, height: 190, duration: 140 },
-      { x: 355, y: 20, width: 255, height: 195, duration: 150 },
-      { x: 565, y: 15, width: 250, height: 200, duration: 160 },
-      { x: 770, y: 5, width: 285, height: 210, duration: 175 },
-      { x: 1020, y: 0, width: 230, height: 215, duration: 190 },
+      { x: 5, y: 50, width: 162, height: 168, duration: 140 },
+      { x: 159, y: 25, width: 175, height: 190, duration: 140 },
+      { x: 325, y: 13, width: 190, height: 200, duration: 150 },
+      { x: 505, y: 15, width: 190, height: 200, duration: 160 },
+      { x: 883, y: 5, width: 185, height: 210, duration: 175 },
+      { x: 1070, y: 0, width: 220, height: 215, duration: 190 },
     ],
 
     // Six-frame corrupted guardian breathing/stance loop.
     idle: [
-      { x: 5, y: 215, width: 250, height: 220, duration: 180 },
-      { x: 245, y: 215, width: 260, height: 220, duration: 180 },
-      { x: 495, y: 215, width: 260, height: 220, duration: 180 },
-      { x: 745, y: 215, width: 255, height: 220, duration: 180 },
-      { x: 995, y: 215, width: 255, height: 220, duration: 180 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
+      { x: 504, y: 215, width: 260, height: 220, duration: 180 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
+      { x: 504, y: 215, width: 260, height: 220, duration: 180 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
     ],
 
     // Guardian lunges forward and releases a sweeping corrupted-energy attack.
     attack: [
-      { x: 5, y: 425, width: 235, height: 245, duration: 120 },
-      { x: 225, y: 425, width: 245, height: 245, duration: 130 },
-      { x: 455, y: 425, width: 250, height: 245, duration: 140 },
-      { x: 690, y: 425, width: 270, height: 245, duration: 150 },
-      { x: 935, y: 425, width: 315, height: 245, duration: 210 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
+      { x: 197, y: 425, width: 222, height: 245, duration: 130 },
+      { x: 424, y: 425, width: 200, height: 234, duration: 140 },
+      { x: 620, y: 425, width: 338, height: 245, duration: 150 },
+      { x: 957, y: 425, width: 296, height: 245, duration: 210 },
     ],
 
     // Dedicated damaged/recoil frames.
     hit: [
-      { x: 5, y: 660, width: 220, height: 205, duration: 90 },
-      { x: 215, y: 660, width: 240, height: 205, duration: 90 },
-      { x: 445, y: 660, width: 225, height: 205, duration: 100 },
-      { x: 660, y: 660, width: 220, height: 205, duration: 105 },
-      { x: 870, y: 660, width: 220, height: 205, duration: 110 },
-      { x: 1075, y: 660, width: 175, height: 205, duration: 120 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
+      { x: 215, y: 660, width: 218, height: 205, duration: 90 },
+      { x: 620, y: 660, width: 220, height: 205, duration: 105 },
+      { x: 830, y: 660, width: 220, height: 205, duration: 110 },
+      { x: 215, y: 660, width: 218, height: 205, duration: 90 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
     ],
 
     // Guardian collapses into corrupted growth and leaves a crystal remnant.
     defeated: [
-      { x: 5, y: 850, width: 220, height: 185, duration: 170 },
-      { x: 215, y: 850, width: 230, height: 185, duration: 180 },
-      { x: 435, y: 850, width: 235, height: 185, duration: 190 },
-      { x: 660, y: 850, width: 220, height: 185, duration: 210 },
-      { x: 870, y: 850, width: 220, height: 185, duration: 225 },
-      { x: 1070, y: 850, width: 180, height: 185, duration: 250 },
+      { x: 257, y: 215, width: 253, height: 220, duration: 180 },
+      { x: 5, y: 900, width: 249, height: 123, duration: 170 },
+      { x: 253, y: 850, width: 200, height: 174, duration: 180 },
+      { x: 460, y: 855, width: 260, height: 174, duration: 180 },
+      { x: 903, y: 903, width: 160, height: 130, duration: 225 },
+      { x: 1075, y: 873, width: 160, height: 148, duration: 225 },
     ],
 
     // Corrupted nature projectile followed by purple crystal impacts.
     special: [
-      { x: 5, y: 1030, width: 260, height: 220, duration: 120 },
-      { x: 255, y: 1030, width: 195, height: 220, duration: 100 },
-      { x: 440, y: 1030, width: 180, height: 220, duration: 100 },
-      { x: 610, y: 1030, width: 175, height: 220, duration: 100 },
-      { x: 775, y: 1030, width: 150, height: 220, duration: 105 },
-      { x: 910, y: 1030, width: 175, height: 220, duration: 140 },
-      { x: 1060, y: 1030, width: 194, height: 220, duration: 170 },
+      { x: 5, y: 1063, width: 191, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 370, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 500, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 370, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 500, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 370, height: 183, duration: 120 },
+      { x: 5, y: 1063, width: 500, height: 183, duration: 120 },
     ],
   },
 }
@@ -1072,6 +1072,127 @@ function WizardSprite({ animation }: { animation: WizardAnimation }) {
   )
 }
 
+
+type CropDebuggerProps = { onClose: () => void }
+type CropValues = { x: number; y: number; width: number; height: number; scale: number; flipX: boolean }
+const DEBUG_ANIMATIONS: (keyof BeastAnimations)[] = ['spawn', 'idle', 'attack', 'hit', 'defeated', 'special']
+
+function CropDebugger({ onClose }: CropDebuggerProps) {
+  const [beastIndex, setBeastIndex] = useState(0)
+  const [animation, setAnimation] = useState<keyof BeastAnimations>('idle')
+  const [frameIndex, setFrameIndex] = useState(0)
+  const [zoom, setZoom] = useState(1)
+  const [values, setValues] = useState<CropValues>(() => {
+    const frame = BEASTS[0].animations.idle[0]
+    return { x: frame.x, y: frame.y, width: frame.width, height: frame.height, scale: 1, flipX: true }
+  })
+
+  const beast = BEASTS[beastIndex]
+  const frames = beast.animations[animation]
+  const safeFrameIndex = Math.min(frameIndex, Math.max(0, frames.length - 1))
+  const sourceFrame = frames[safeFrameIndex]
+
+  const loadFrame = (nextBeast: Beast, nextAnimation: keyof BeastAnimations, nextFrameIndex = 0) => {
+    const nextFrames = nextBeast.animations[nextAnimation]
+    const frame = nextFrames[Math.min(nextFrameIndex, nextFrames.length - 1)]
+    setValues({ x: frame.x, y: frame.y, width: frame.width, height: frame.height, scale: 1, flipX: nextBeast.name !== 'Giant Radioactive Bat' })
+  }
+
+  const nudge = (key: 'x' | 'y' | 'width' | 'height', amount: number) => {
+    setValues(current => ({ ...current, [key]: Math.max(key === 'width' || key === 'height' ? 1 : 0, current[key] + amount) }))
+  }
+
+  const copyConfig = async () => {
+    const output = `{ x: ${Math.round(values.x)}, y: ${Math.round(values.y)}, width: ${Math.round(values.width)}, height: ${Math.round(values.height)}, duration: ${sourceFrame.duration ?? 160} },`
+    try {
+      await navigator.clipboard.writeText(output)
+      window.alert('Crop config copied!')
+    } catch {
+      window.prompt('Copy this crop config:', output)
+    }
+  }
+
+  const sheetPreviewWidth = Math.min(620, Math.max(320, beast.sheetWidth))
+  const sheetScale = sheetPreviewWidth / beast.sheetWidth
+
+  return (
+    <div style={styles.debugOverlay}>
+      <div style={styles.debugPanel}>
+        <div style={styles.debugHeader}>
+          <div>
+            <div style={styles.debugKicker}>🛠 SPRITE CROP DEBUGGER</div>
+            <h2 style={styles.debugTitle}>Tune the beast frames manually</h2>
+            <div style={styles.debugHint}>Green = original frame. Pink = the crop you are actually previewing.</div>
+          </div>
+          <button type="button" onClick={onClose} style={styles.debugClose}>✕ CLOSE</button>
+        </div>
+
+        <div style={styles.debugControlsRow}>
+          <label style={styles.debugSelectLabel}>BEAST
+            <select value={beastIndex} onChange={e => { const next = Number(e.target.value); setBeastIndex(next); setFrameIndex(0); loadFrame(BEASTS[next], animation, 0) }} style={styles.debugSelect}>
+              {BEASTS.map((item, index) => <option key={item.name} value={index}>{item.name}</option>)}
+            </select>
+          </label>
+          <label style={styles.debugSelectLabel}>ANIMATION
+            <select value={animation} onChange={e => { const next = e.target.value as keyof BeastAnimations; setAnimation(next); setFrameIndex(0); loadFrame(beast, next, 0) }} style={styles.debugSelect}>
+              {DEBUG_ANIMATIONS.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
+            </select>
+          </label>
+          <label style={styles.debugSelectLabel}>FRAME
+            <select value={safeFrameIndex} onChange={e => { const next = Number(e.target.value); setFrameIndex(next); loadFrame(beast, animation, next) }} style={styles.debugSelect}>
+              {frames.map((_, index) => <option key={index} value={index}>{index + 1} / {frames.length}</option>)}
+            </select>
+          </label>
+          <button type="button" onClick={copyConfig} style={styles.debugCopy}>COPY FRAME CONFIG</button>
+        </div>
+
+        <div style={styles.debugWorkspace}>
+          <div style={styles.debugSheetPane}>
+            <div style={styles.debugPaneTitle}>SOURCE SHEET — {beast.sheetWidth} × {beast.sheetHeight}</div>
+            <div style={{ ...styles.debugSheet, width: sheetPreviewWidth, height: beast.sheetHeight * sheetScale }}>
+              <div style={{ ...styles.debugSheetImage, width: beast.sheetWidth * sheetScale, height: beast.sheetHeight * sheetScale, backgroundImage: `url("${beast.sheet}")`, backgroundSize: `${beast.sheetWidth * sheetScale}px ${beast.sheetHeight * sheetScale}px` }} />
+              <div style={{ ...styles.debugSourceRect, left: sourceFrame.x * sheetScale, top: sourceFrame.y * sheetScale, width: sourceFrame.width * sheetScale, height: sourceFrame.height * sheetScale }} />
+              <div style={{ ...styles.debugCropRect, left: values.x * sheetScale, top: values.y * sheetScale, width: values.width * sheetScale, height: values.height * sheetScale }} />
+            </div>
+            <div style={styles.debugLegend}><span><i style={{ ...styles.debugLegendDot, background: '#4ade80' }} /> original frame</span><span><i style={{ ...styles.debugLegendDot, background: '#ff4fd8' }} /> current crop</span></div>
+          </div>
+
+          <div style={styles.debugPreviewPane}>
+            <div style={styles.debugPaneTitle}>LIVE PREVIEW</div>
+            <div style={{ ...styles.debugPreview, transform: `scale(${zoom})` }}>
+              <div style={{ width: values.width, height: values.height, overflow: 'hidden', position: 'relative', transform: values.flipX ? 'scaleX(-1)' : undefined }}>
+                <div style={{ position: 'absolute', width: beast.sheetWidth, height: beast.sheetHeight, left: -values.x, top: -values.y, backgroundImage: `url("${beast.sheet}")`, backgroundRepeat: 'no-repeat', backgroundSize: `${beast.sheetWidth}px ${beast.sheetHeight}px` }} />
+              </div>
+            </div>
+
+            <div style={styles.debugNumbers}>
+              {(['x', 'y', 'width', 'height'] as const).map(key => (
+                <div key={key} style={styles.debugNumberControl}>
+                  <span>{key.toUpperCase()}</span>
+                  <button type="button" onClick={() => nudge(key, -1)}>−</button>
+                  <input type="number" value={Math.round(values[key])} onChange={e => setValues(v => ({ ...v, [key]: Math.max(key === 'width' || key === 'height' ? 1 : 0, Number(e.target.value) || 0) }))} />
+                  <button type="button" onClick={() => nudge(key, 1)}>+</button>
+                </div>
+              ))}
+              <div style={styles.debugNumberControl}>
+                <span>ZOOM</span><button type="button" onClick={() => setZoom(z => Math.max(.25, Number((z - .1).toFixed(1))))}>−</button>
+                <input type="number" step="0.1" value={zoom.toFixed(1)} onChange={e => setZoom(Math.max(.25, Number(e.target.value) || 1))} />
+                <button type="button" onClick={() => setZoom(z => Number((z + .1).toFixed(1)))}>+</button>
+              </div>
+              <label style={styles.debugFlip}><input type="checkbox" checked={values.flipX} onChange={e => setValues(v => ({ ...v, flipX: e.target.checked }))} /> FLIP HORIZONTALLY</label>
+            </div>
+          </div>
+        </div>
+
+        <div style={styles.debugFooter}>
+          <span>{beast.name} → {animation.toUpperCase()} frame {safeFrameIndex + 1}</span>
+          <code>{`{ x: ${Math.round(values.x)}, y: ${Math.round(values.y)}, width: ${Math.round(values.width)}, height: ${Math.round(values.height)}, duration: ${sourceFrame.duration ?? 160} },`}</code>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CavernCombat({
   questions,
   onComplete,
@@ -1085,6 +1206,7 @@ export default function CavernCombat({
     const [phase, setPhase] = useState<GamePhase>('appearing')
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null)
+  const [showCropDebugger, setShowCropDebugger] = useState(false)
 
   const question = safeQuestions[questionIndex]
   const choices = useMemo(() => getChoices(question ?? {}), [question])
@@ -1339,8 +1461,11 @@ export default function CavernCombat({
           <h1 style={styles.title}>{assignmentTitle}</h1>
         </div>
 
-        <div style={styles.counter}>
-          BEAST {questionIndex + 1} / {safeQuestions.length}
+        <div style={styles.headerActions}>
+          <button type="button" onClick={() => setShowCropDebugger(true)} style={styles.debugLaunch}>🛠 CROP DEBUG</button>
+          <div style={styles.counter}>
+            BEAST {questionIndex + 1} / {safeQuestions.length}
+          </div>
         </div>
       </header>
 
@@ -1500,11 +1625,43 @@ export default function CavernCombat({
           SCORE <strong>{score}/{safeQuestions.length}</strong>
         </div>
       </footer>
+
+      {showCropDebugger && (
+        <CropDebugger onClose={() => setShowCropDebugger(false)} />
+      )}
     </div>
   )
 }
 
 const styles: Record<string, React.CSSProperties> = {
+  headerActions: { display: 'flex', alignItems: 'center', gap: 10 },
+  debugLaunch: { border: '1px solid rgba(176,155,255,.45)', background: 'rgba(9,8,24,.82)', color: '#e9ddff', padding: '8px 11px', borderRadius: 8, fontWeight: 800, fontSize: 11, letterSpacing: 1, cursor: 'pointer' },
+  debugOverlay: { position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(2,2,8,.92)', backdropFilter: 'blur(8px)', padding: 18, overflow: 'auto' },
+  debugPanel: { maxWidth: 1450, minHeight: 'calc(100vh - 36px)', margin: '0 auto', background: '#090817', border: '1px solid rgba(176,155,255,.35)', boxShadow: '0 25px 80px rgba(0,0,0,.65)', borderRadius: 14, padding: 20, color: '#eeeaff' },
+  debugHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, marginBottom: 16 },
+  debugKicker: { color: '#b9a1ff', fontSize: 11, fontWeight: 900, letterSpacing: 2.5 },
+  debugTitle: { margin: '5px 0 3px', fontSize: 24 },
+  debugHint: { color: 'rgba(235,230,255,.62)', fontSize: 12 },
+  debugClose: { border: '1px solid rgba(255,255,255,.2)', background: 'rgba(255,255,255,.06)', color: '#fff', padding: '9px 12px', borderRadius: 8, cursor: 'pointer', fontWeight: 800 },
+  debugControlsRow: { display: 'flex', flexWrap: 'wrap', alignItems: 'end', gap: 10, padding: 12, background: 'rgba(255,255,255,.035)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 10, marginBottom: 14 },
+  debugSelectLabel: { display: 'flex', flexDirection: 'column', gap: 5, color: '#b9a1ff', fontSize: 9, fontWeight: 900, letterSpacing: 1.3 },
+  debugSelect: { minWidth: 180, background: '#111025', color: '#fff', border: '1px solid rgba(176,155,255,.3)', borderRadius: 7, padding: '9px 10px' },
+  debugCopy: { marginLeft: 'auto', border: '1px solid rgba(74,222,128,.45)', background: 'rgba(74,222,128,.1)', color: '#bfffd1', padding: '10px 13px', borderRadius: 7, cursor: 'pointer', fontWeight: 900, fontSize: 10, letterSpacing: 1 },
+  debugWorkspace: { display: 'grid', gridTemplateColumns: 'minmax(0, 1.25fr) minmax(340px, .75fr)', gap: 14, alignItems: 'start' },
+  debugSheetPane: { minWidth: 0, background: '#05050d', border: '1px solid rgba(255,255,255,.08)', borderRadius: 10, padding: 12, overflow: 'auto' },
+  debugPreviewPane: { minWidth: 0, background: '#05050d', border: '1px solid rgba(255,255,255,.08)', borderRadius: 10, padding: 12 },
+  debugPaneTitle: { fontSize: 10, color: '#b9a1ff', fontWeight: 900, letterSpacing: 1.5, marginBottom: 9 },
+  debugSheet: { position: 'relative', margin: '0 auto', background: '#000', overflow: 'hidden' },
+  debugSheetImage: { position: 'absolute', inset: 0, backgroundRepeat: 'no-repeat' },
+  debugSourceRect: { position: 'absolute', border: '2px solid #4ade80', boxSizing: 'border-box', pointerEvents: 'none' },
+  debugCropRect: { position: 'absolute', border: '2px solid #ff4fd8', boxShadow: '0 0 0 9999px rgba(0,0,0,.18)', boxSizing: 'border-box', pointerEvents: 'none' },
+  debugLegend: { display: 'flex', gap: 16, marginTop: 8, color: 'rgba(255,255,255,.65)', fontSize: 10 },
+  debugLegendDot: { display: 'inline-block', width: 8, height: 8, borderRadius: '50%', marginRight: 4 },
+  debugPreview: { minHeight: 330, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(circle, rgba(93,68,155,.16), rgba(0,0,0,.4) 65%)', border: '1px dashed rgba(176,155,255,.22)', overflow: 'hidden', transformOrigin: 'center' },
+  debugNumbers: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7, marginTop: 10 },
+  debugNumberControl: { display: 'grid', gridTemplateColumns: '42px 28px minmax(50px,1fr) 28px', alignItems: 'center', gap: 4, fontSize: 9, fontWeight: 900, color: '#b9a1ff' },
+  debugFlip: { gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: 7, color: '#e8e3ff', fontSize: 10, fontWeight: 800 },
+  debugFooter: { marginTop: 12, padding: '9px 11px', display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', background: 'rgba(176,155,255,.06)', border: '1px solid rgba(176,155,255,.12)', borderRadius: 8, color: 'rgba(255,255,255,.7)', fontSize: 10 },
   shell: {
     height: '100dvh',
     minHeight: 0,
@@ -1980,5 +2137,3 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 70,
   },
 }
-
-export { BEASTS, CAVERN_SPIDER, ONE_EYED_CRAWLER, ICE_TIGER }
