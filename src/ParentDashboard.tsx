@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getChildren, type User } from './userData'
+import { getChildren, getXPProgress, type User } from './userData'
 
 const GAME_COLORS: Record<string, string> = {
   'Dragon Dungeon': '#ff7c2a',
@@ -31,6 +31,7 @@ const FALLBACK_CHILD = {
   grade: 'Year 3',
   level: 12,
   xp: 3480,
+  xpStart: 3250,
   xpNext: 4000,
   streak: 7,
   totalStars: 48,
@@ -72,6 +73,8 @@ type ParentAssignment = {
   game: string
   grade: string
   due: string
+  dueStatus: string
+  dueColor: string
   done: boolean
   score: number
   attempts: number
@@ -105,6 +108,28 @@ function formatDate(value?: string) {
   }
 
   return value
+}
+
+function getDueStatus(value: string | undefined, completed: boolean) {
+  if (completed) return { label: 'COMPLETED', color: '#39ff14' }
+  if (!value) return { label: 'NO DUE DATE', color: '#4a4a8a' }
+
+  const match = /^(\\d{4})-(\\d{1,2})-(\\d{1,2})$/.exec(value)
+  if (!match) return { label: `DUE ${formatDate(value)}`, color: '#4a4a8a' }
+
+  const [, year, month, day] = match
+  const due = new Date(Number(year), Number(month) - 1, Number(day))
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const diffDays = Math.round((due.getTime() - today.getTime()) / 86400000)
+
+  if (diffDays < 0) return { label: `OVERDUE ${Math.abs(diffDays)}D`, color: '#ff2d78' }
+  if (diffDays === 0) return { label: 'DUE TODAY', color: '#ff2d78' }
+  if (diffDays === 1) return { label: 'DUE TOMORROW', color: '#ffe600' }
+  if (diffDays <= 7) return { label: `DUE IN ${diffDays}D`, color: '#ffe600' }
+
+  return { label: `DUE IN ${diffDays}D`, color: '#4a4a8a' }
 }
 
 function getStudentResult(
@@ -143,6 +168,9 @@ function normalizeAssignment(
     studentResult?.completed === true ||
     completedByThisStudent
 
+  const rawDue = assignment.dueDate || assignment.due
+  const dueStatus = getDueStatus(rawDue, done)
+
   return {
     id: assignment.id ?? `assignment-${index}`,
     title:
@@ -156,7 +184,9 @@ function normalizeAssignment(
       assignment.grade ||
       'Year 3',
     due:
-      formatDate(assignment.dueDate || assignment.due),
+      formatDate(rawDue),
+    dueStatus: dueStatus.label,
+    dueColor: dueStatus.color,
     done,
     score,
     attempts:
@@ -224,6 +254,7 @@ function Overview({
 }) {
   const completed = assignments.filter(a => a.done)
   const pending = assignments.filter(a => !a.done)
+  const childXP = getXPProgress(selectedChild)
 
   const avgAccuracy = completed.length
     ? Math.round(
@@ -319,7 +350,7 @@ function Overview({
                   color: '#ffe600',
                 }}
               >
-                {selectedChild.xp} / {selectedChild.xpNext}
+                {selectedChild.xp.toLocaleString()} / {selectedChild.xpNext.toLocaleString()}
               </span>
             </div>
 
@@ -333,18 +364,19 @@ function Overview({
               <div
                 className="h-full"
                 style={{
-                  width: `${Math.min(
-                    100,
-                    (selectedChild.xp /
-                      selectedChild.xpNext) *
-                      100,
-                  )}%`,
+                  width: `${childXP?.progress ?? 0}%`,
                   background:
                     'linear-gradient(90deg,#ffe600,#ff7c2a)',
                   boxShadow: '0 0 8px #ffe60088',
                 }}
               />
             </div>
+            <p
+              className="font-pixel mt-1 text-center"
+              style={{ fontSize: '5px', color: '#4a4a8a' }}
+            >
+              {childXP ? `${childXP.remaining.toLocaleString()} XP TO LEVEL UP` : ''}
+            </p>
           </div>
         </div>
       </div>
@@ -480,15 +512,13 @@ function Overview({
                   className="font-pixel"
                   style={{
                     fontSize: '7px',
-                    color: '#ffe600',
-                    background:
-                      'rgba(255,230,0,0.1)',
-                    border:
-                      '1px solid #ffe60033',
+                    color: assignment.dueColor,
+                    background: `${assignment.dueColor}0d`,
+                    border: `1px solid ${assignment.dueColor}44`,
                     padding: '3px 8px',
                   }}
                 >
-                  DUE {assignment.due}
+                  {assignment.dueStatus}
                 </span>
               </div>
             )
@@ -685,14 +715,12 @@ function Assignments({
                       className="font-pixel px-2 py-1"
                       style={{
                         fontSize: '7px',
-                        color: '#ffe600',
-                        background:
-                          'rgba(255,230,0,0.1)',
-                        border:
-                          '1px solid #ffe60033',
+                        color: assignment.dueColor,
+                        background: `${assignment.dueColor}0d`,
+                        border: `1px solid ${assignment.dueColor}44`,
                       }}
                     >
-                      DUE {assignment.due}
+                      {assignment.dueStatus}
                     </span>
                   )}
                 </div>
@@ -1183,6 +1211,7 @@ export default function ParentDashboard({
         grade: selectedChildUser.year ?? FALLBACK_CHILD.grade,
         level: selectedChildUser.level,
         xp: selectedChildUser.xp,
+        xpStart: selectedChildUser.xpStart,
         xpNext: selectedChildUser.xpNext,
         streak: selectedChildUser.streak,
         totalStars: selectedChildUser.totalStars,

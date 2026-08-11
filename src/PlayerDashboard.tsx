@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import CyberpunkBiking from './games/CyberpunkBiking'
-import type { User } from './userData'
+import { getXPProgress, type User } from './userData'
 const GAME_COLORS: Record<string, string> = {
   'Dragon Dungeon':     '#ff7c2a',
   'Cavern Combat':      '#bf5fff',
@@ -83,6 +83,47 @@ function AccuracyBar({ value, color }: { value: number; color: string }) {
   )
 }
 
+function getDueInfo(value: string | undefined, completed: boolean) {
+  if (completed) {
+    return { label: 'COMPLETED', color: '#39ff14' }
+  }
+
+  if (!value) {
+    return { label: 'NO DUE DATE', color: '#4a4a8a' }
+  }
+
+  const match = /^(\\d{4})-(\\d{1,2})-(\\d{1,2})$/.exec(value)
+  if (!match) {
+    return { label: `DUE ${value}`, color: '#4a4a8a' }
+  }
+
+  const [, year, month, day] = match
+  const due = new Date(Number(year), Number(month) - 1, Number(day))
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const diffDays = Math.round((due.getTime() - today.getTime()) / 86400000)
+
+  if (diffDays < 0) {
+    const days = Math.abs(diffDays)
+    return { label: `OVERDUE ${days}D`, color: '#ff2d78' }
+  }
+
+  if (diffDays === 0) {
+    return { label: 'DUE TODAY', color: '#ff2d78' }
+  }
+
+  if (diffDays === 1) {
+    return { label: 'DUE TOMORROW', color: '#ffe600' }
+  }
+
+  if (diffDays <= 7) {
+    return { label: `DUE IN ${diffDays}D`, color: '#ffe600' }
+  }
+
+  return { label: `DUE IN ${diffDays}D`, color: '#4a4a8a' }
+}
+
 // ── Active Quests ──────────────────────────────────────────────────────────
 function ActiveQuests({
   assignments,
@@ -104,6 +145,7 @@ function ActiveQuests({
       {assignments.map(q => {
         const color = GAME_COLORS[q.game]
         const done = Boolean(q.completed)
+        const dueInfo = getDueInfo(q.dueDate, done)
         return (
           <div key={q.id} className="flex flex-col gap-3 p-4"
             style={{ border: `1px solid ${done ? color + '55' : '#1e1e4a'}`, background: done ? `${color}08` : 'rgba(10,10,30,0.8)' }}>
@@ -114,7 +156,18 @@ function ActiveQuests({
                 <div className="flex items-center gap-3 mt-1">
                   <span className="font-body" style={{ fontSize: '11px', color }}>{q.game}</span>
                   <span className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>Set by {q.teacher}</span>
-                  <span className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>Due {q.dueDate}</span>
+                  <span
+                    className="font-pixel px-2 py-1"
+                    style={{
+                      fontSize: '6px',
+                      color: dueInfo.color,
+                      border: `1px solid ${dueInfo.color}44`,
+                      background: `${dueInfo.color}0d`,
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    {dueInfo.label}
+                  </span>
                 </div>
               </div>
               <div className="text-right shrink-0">
@@ -186,19 +239,39 @@ function MyStats({ player }: { player: User & { grade: string } }) {
       </div>
 
       {/* XP bar */}
-      <div>
-        <div className="flex justify-between mb-1.5">
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {player.level}</span>
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#ffe600' }}>{player.xp} / {player.xpNext} XP</span>
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {player.level + 1}</span>
-        </div>
-        <div className="w-full h-4 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
-          <div className="h-full rounded-sm relative overflow-hidden"
-            style={{ width: `${(player.xp / player.xpNext) * 100}%`, background: 'linear-gradient(90deg, #ffe600, #ff7c2a)', boxShadow: '0 0 10px #ffe60088' }}>
-            <div className="absolute inset-0 opacity-30" style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.3) 8px, rgba(255,255,255,0.3) 10px)' }} />
+      {(() => {
+        const xpProgress = getXPProgress(player)
+        return (
+          <div>
+            <div className="flex justify-between mb-1.5">
+              <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>
+                LEVEL {player.level}
+              </span>
+              <span className="font-pixel" style={{ fontSize: '7px', color: '#ffe600' }}>
+                {xpProgress.current.toLocaleString()} / {xpProgress.next.toLocaleString()} XP
+              </span>
+              <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>
+                LEVEL {player.level + 1}
+              </span>
+            </div>
+            <div className="w-full h-4 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
+              <div
+                className="h-full rounded-sm relative overflow-hidden transition-all"
+                style={{
+                  width: `${xpProgress.progress}%`,
+                  background: 'linear-gradient(90deg, #ffe600, #ff7c2a)',
+                  boxShadow: '0 0 10px #ffe60088',
+                }}
+              >
+                <div className="absolute inset-0 opacity-30" style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.3) 8px, rgba(255,255,255,0.3) 10px)' }} />
+              </div>
+            </div>
+            <p className="font-body mt-1 text-center" style={{ fontSize: '11px', color: '#4a4a8a' }}>
+              {xpProgress.remaining.toLocaleString()} XP TO LEVEL UP
+            </p>
           </div>
-        </div>
-      </div>
+        )
+      })()}
 
       {/* Per-game scores */}
       <div>
@@ -470,13 +543,34 @@ export default function PlayerDashboard({
               <span className="font-pixel" style={{ fontSize: '8px', color: '#ff7c2a' }}>{player.streak} DAY STREAK</span>
             </div>
             <div className="w-full mt-1">
-              <div className="flex justify-between mb-1">
-                <span className="font-pixel" style={{ fontSize: '6px', color: '#4a4a8a' }}>LV {player.level}</span>
-                <span className="font-pixel" style={{ fontSize: '6px', color: '#ffe600' }}>{Math.round((player.xp / player.xpNext) * 100)}%</span>
-              </div>
-              <div className="w-full h-2 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
-                <div className="h-full rounded-sm" style={{ width: `${(player.xp / player.xpNext) * 100}%`, background: 'linear-gradient(90deg,#ffe600,#ff7c2a)', boxShadow: '0 0 6px #ffe600' }} />
-              </div>
+              {(() => {
+                const xpProgress = getXPProgress(player)
+                return (
+                  <>
+                    <div className="flex justify-between mb-1">
+                      <span className="font-pixel" style={{ fontSize: '6px', color: '#4a4a8a' }}>
+                        LV {player.level}
+                      </span>
+                      <span className="font-pixel" style={{ fontSize: '6px', color: '#ffe600' }}>
+                        {Math.round(xpProgress.progress)}%
+                      </span>
+                    </div>
+                    <div className="w-full h-2 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
+                      <div
+                        className="h-full rounded-sm transition-all"
+                        style={{
+                          width: `${xpProgress.progress}%`,
+                          background: 'linear-gradient(90deg,#ffe600,#ff7c2a)',
+                          boxShadow: '0 0 6px #ffe600',
+                        }}
+                      />
+                    </div>
+                    <p className="font-pixel mt-1 text-center" style={{ fontSize: '5px', color: '#4a4a8a' }}>
+                      {xpProgress.current.toLocaleString()} / {xpProgress.next.toLocaleString()} XP
+                    </p>
+                  </>
+                )
+              })()}
             </div>
           </div>
 

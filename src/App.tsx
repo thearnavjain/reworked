@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { findUser, getUsers, type User } from './userData'
+import { awardQuestXP, findUser, getUsers, type User } from './userData'
 import TeacherDashboard from './TeacherDashboard'
 import PlayerDashboard from './PlayerDashboard'
 import ParentDashboard from './ParentDashboard'
@@ -206,15 +206,39 @@ const handleAssignmentCreated = (assignment: any) => {
 const handleAssignmentCompleted = (assignmentId: string | number, score: number, total: number) => {
   if (!currentUser || currentUser.role !== 'student') return
 
-  setAssignments(prev => {
-    const accuracy = total > 0 ? Math.round((score / total) * 100) : 0
-    const completedAt = new Date().toLocaleDateString('en-GB')
+  const accuracy = total > 0 ? Math.round((score / total) * 100) : 0
+  const currentAssignment = assignments.find(assignment => assignment.id === assignmentId)
+  const existingStudents = Array.isArray(currentAssignment?.students)
+    ? currentAssignment.students
+    : []
+  const existing = existingStudents.find((student: any) =>
+    student.id === currentUser.id || student.name === currentUser.name,
+  )
+  const alreadyCompleted =
+    existing?.completed === true ||
+    currentAssignment?.completedById === currentUser.id ||
+    currentAssignment?.completedBy === currentUser.name
 
+  // XP is awarded once, on the student's first completion of a quest.
+  // Retries can still improve the displayed score without allowing XP farming.
+  if (!alreadyCompleted) {
+    const progress = awardQuestXP(currentUser.id, accuracy)
+    if (progress) {
+      setCurrentUser(progress.user)
+    }
+  }
+
+  const completedAt = new Date().toLocaleDateString('en-GB')
+
+  setAssignments(prev => {
     const updated = prev.map(assignment => {
       if (assignment.id !== assignmentId) return assignment
 
-      const existingStudents = Array.isArray(assignment.students) ? assignment.students : []
-      const existing = existingStudents.find((student: any) =>
+      const studentsForAssignment = Array.isArray(assignment.students)
+        ? assignment.students
+        : []
+
+      const studentResult = studentsForAssignment.find((student: any) =>
         student.id === currentUser.id || student.name === currentUser.name,
       )
 
@@ -224,15 +248,17 @@ const handleAssignmentCompleted = (assignmentId: string | number, score: number,
         avatar: currentUser.avatar,
         completed: true,
         accuracy,
-        timeSpent: existing?.timeSpent ?? '—',
-        attempts: (existing?.attempts ?? 0) + 1,
+        timeSpent: studentResult?.timeSpent ?? '—',
+        attempts: (studentResult?.attempts ?? 0) + 1,
       }
 
-      const students = existing
-        ? existingStudents.map((student: any) =>
-            student.id === currentUser.id || student.name === currentUser.name ? updatedStudent : student,
+      const students = studentResult
+        ? studentsForAssignment.map((student: any) =>
+            student.id === currentUser.id || student.name === currentUser.name
+              ? updatedStudent
+              : student,
           )
-        : [...existingStudents, updatedStudent]
+        : [...studentsForAssignment, updatedStudent]
 
       return {
         ...assignment,
