@@ -215,7 +215,7 @@ function UploadAssignment({ onAssignmentCreated }: { onAssignmentCreated: (assig
         instructions,
         dueDate,
         teacher: 'Mr. Shreenath Verma',
-        student: 'Arnav Jain',
+        targetYear: grade,
         questions: allGeneratedQuestions,
       }
 

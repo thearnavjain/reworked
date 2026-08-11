@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { getChildren, type User } from './userData'
 
 const GAME_COLORS: Record<string, string> = {
   'Dragon Dungeon': '#ff7c2a',
@@ -43,6 +44,7 @@ type RawAssignment = {
   game?: string
   grade?: string
   date?: string
+  targetYear?: string
   dueDate?: string
   due?: string
   instructions?: string
@@ -52,6 +54,8 @@ type RawAssignment = {
   score?: number
   bestScore?: number
   accuracy?: number
+  completedBy?: string
+  completedById?: string
   students?: Array<{
     name?: string
     completed?: boolean
@@ -105,7 +109,7 @@ function formatDate(value?: string) {
 
 function getStudentResult(
   assignment: RawAssignment,
-  studentName = 'Arnav Jain',
+  studentName: string,
 ) {
   const students = Array.isArray(assignment.students)
     ? assignment.students
@@ -114,9 +118,6 @@ function getStudentResult(
   const result =
     students.find(s =>
       (s.name || '').toLowerCase().includes(studentName.toLowerCase()),
-    ) ||
-    students.find(s =>
-      (s.name || '').toLowerCase().includes('arnav'),
     )
 
   return result
@@ -125,24 +126,22 @@ function getStudentResult(
 function normalizeAssignment(
   assignment: RawAssignment,
   index: number,
+  studentName: string,
 ): ParentAssignment {
-  const studentResult = getStudentResult(assignment)
+  const studentResult = getStudentResult(assignment, studentName)
 
+  const completedByThisStudent = assignment.completedBy === studentName
   const rawScore =
     studentResult?.accuracy ??
     studentResult?.score ??
-    assignment.accuracy ??
-    assignment.bestScore ??
-    assignment.score ??
+    (completedByThisStudent ? assignment.accuracy ?? assignment.bestScore ?? assignment.score : 0) ??
     0
 
   const score = Number(rawScore) || 0
 
   const done =
     studentResult?.completed === true ||
-    assignment.completed === true ||
-    assignment.done === true ||
-    score > 0
+    completedByThisStudent
 
   return {
     id: assignment.id ?? `assignment-${index}`,
@@ -1112,8 +1111,10 @@ function ActivityFeed({
 
 export default function ParentDashboard({
   onLogout,
+  currentUser,
 }: {
   onLogout: () => void
+  currentUser: User
 }) {
   const [view, setView] = useState<
     'overview' |
@@ -1170,18 +1171,41 @@ export default function ParentDashboard({
     }
   }, [])
 
+  const children = getChildren(currentUser)
+  const [selectedChildId, setSelectedChildId] = useState(children[0]?.id ?? '')
+  const selectedChildUser = children.find(child => child.id === selectedChildId) ?? children[0]
+
+  const child = selectedChildUser
+    ? {
+        ...FALLBACK_CHILD,
+        name: selectedChildUser.name,
+        avatar: selectedChildUser.avatar,
+        grade: selectedChildUser.year ?? FALLBACK_CHILD.grade,
+        level: selectedChildUser.level,
+        xp: selectedChildUser.xp,
+        xpNext: selectedChildUser.xpNext,
+        streak: selectedChildUser.streak,
+        totalStars: selectedChildUser.totalStars,
+        teacher: selectedChildUser.teacher ?? FALLBACK_CHILD.teacher,
+      }
+    : FALLBACK_CHILD
+
   const assignments = useMemo(
     () =>
-      rawAssignments.map((assignment, index) =>
-        normalizeAssignment(
-          assignment,
-          index,
+      rawAssignments
+        .filter(assignment =>
+          !selectedChildUser ||
+          (assignment.grade ?? assignment.targetYear) === selectedChildUser.year,
+        )
+        .map((assignment, index) =>
+          normalizeAssignment(
+            assignment,
+            index,
+            selectedChildUser?.name ?? FALLBACK_CHILD.name,
+          ),
         ),
-      ),
-    [rawAssignments],
+    [rawAssignments, selectedChildUser?.id, selectedChildUser?.name, selectedChildUser?.year],
   )
-
-  const child = FALLBACK_CHILD
 
   const NAV = [
     {
@@ -1289,7 +1313,7 @@ export default function ParentDashboard({
                 color: '#8888aa',
               }}
             >
-              Parent · Arnav
+              Parent · {children.length} {children.length === 1 ? 'child' : 'children'}
             </span>
           </div>
 
@@ -1334,45 +1358,40 @@ export default function ParentDashboard({
               MY CHILD
             </p>
 
-            <button
-              className="w-full flex items-center gap-2 px-2 py-2.5"
-              style={{
-                border:
-                  '1px solid #bf5fff',
-                background:
-                  'rgba(191,95,255,0.1)',
-                cursor: 'default',
-              }}
-            >
-              <span style={{ fontSize: '20px' }}>
-                {child.avatar}
-              </span>
-
-              <div className="text-left">
-                <p
-                  className="font-pixel"
-                  style={{
-                    fontSize: '8px',
-                    color: '#bf5fff',
-                    textShadow:
-                      '0 0 6px #bf5fff',
-                  }}
-                >
-                  {child.name}
-                </p>
-
-                <p
-                  className="font-body"
-                  style={{
-                    fontSize: '10px',
-                    color: '#2e2e5e',
-                  }}
-                >
-                  {child.grade} · Lv.
-                  {child.level}
-                </p>
-              </div>
-            </button>
+            <div className="flex flex-col gap-2">
+              {children.map(candidate => {
+                const selected = candidate.id === selectedChildUser?.id
+                return (
+                  <button
+                    key={candidate.id}
+                    onClick={() => setSelectedChildId(candidate.id)}
+                    className="w-full flex items-center gap-2 px-2 py-2.5 text-left"
+                    style={{
+                      border: `1px solid ${selected ? '#bf5fff' : '#1e1e4a'}`,
+                      background: selected ? 'rgba(191,95,255,0.1)' : 'transparent',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span style={{ fontSize: '20px' }}>{candidate.avatar}</span>
+                    <div>
+                      <p
+                        className="font-pixel"
+                        style={{
+                          fontSize: '8px',
+                          color: selected ? '#bf5fff' : '#8888aa',
+                          textShadow: selected ? '0 0 6px #bf5fff' : 'none',
+                        }}
+                      >
+                        {candidate.name}
+                      </p>
+                      <p className="font-body" style={{ fontSize: '10px', color: '#2e2e5e' }}>
+                        {candidate.year ?? 'No year'} · Lv.{candidate.level}
+                      </p>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           <div

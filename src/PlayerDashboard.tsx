@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import CyberpunkBiking from './games/CyberpunkBiking'
+import type { User } from './userData'
 const GAME_COLORS: Record<string, string> = {
   'Dragon Dungeon':     '#ff7c2a',
   'Cavern Combat':      '#bf5fff',
@@ -147,7 +148,7 @@ function ActiveQuests({
 }
 
 // ── My Stats ───────────────────────────────────────────────────────────────
-function MyStats() {
+function MyStats({ player }: { player: User & { grade: string } }) {
   const gameScores = [
     { game: 'Spaceship Shootout', score: 94, plays: 3 },
     { game: 'Dragon Dungeon',     score: 78, plays: 1 },
@@ -170,10 +171,10 @@ function MyStats() {
       {/* Stat tiles */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { label: 'TOTAL XP',    value: PLAYER.xp.toLocaleString(), icon: '⚡', color: '#ffe600' },
-          { label: 'LEVEL',       value: PLAYER.level,               icon: '🏅', color: '#00f5ff' },
-          { label: 'DAY STREAK',  value: PLAYER.streak,              icon: '🔥', color: '#ff7c2a' },
-          { label: 'TOTAL STARS', value: PLAYER.totalStars,          icon: '⭐', color: '#ffe600' },
+          { label: 'TOTAL XP',    value: player.xp.toLocaleString(), icon: '⚡', color: '#ffe600' },
+          { label: 'LEVEL',       value: player.level,               icon: '🏅', color: '#00f5ff' },
+          { label: 'DAY STREAK',  value: player.streak,              icon: '🔥', color: '#ff7c2a' },
+          { label: 'TOTAL STARS', value: player.totalStars,          icon: '⭐', color: '#ffe600' },
         ].map(s => (
           <div key={s.label} className="flex flex-col items-center py-4 gap-1"
             style={{ border: `1px solid ${s.color}44`, background: `${s.color}08` }}>
@@ -187,13 +188,13 @@ function MyStats() {
       {/* XP bar */}
       <div>
         <div className="flex justify-between mb-1.5">
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {PLAYER.level}</span>
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#ffe600' }}>{PLAYER.xp} / {PLAYER.xpNext} XP</span>
-          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {PLAYER.level + 1}</span>
+          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {player.level}</span>
+          <span className="font-pixel" style={{ fontSize: '7px', color: '#ffe600' }}>{player.xp} / {player.xpNext} XP</span>
+          <span className="font-pixel" style={{ fontSize: '7px', color: '#4a4a8a' }}>LEVEL {player.level + 1}</span>
         </div>
         <div className="w-full h-4 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
           <div className="h-full rounded-sm relative overflow-hidden"
-            style={{ width: `${(PLAYER.xp / PLAYER.xpNext) * 100}%`, background: 'linear-gradient(90deg, #ffe600, #ff7c2a)', boxShadow: '0 0 10px #ffe60088' }}>
+            style={{ width: `${(player.xp / player.xpNext) * 100}%`, background: 'linear-gradient(90deg, #ffe600, #ff7c2a)', boxShadow: '0 0 10px #ffe60088' }}>
             <div className="absolute inset-0 opacity-30" style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.3) 8px, rgba(255,255,255,0.3) 10px)' }} />
           </div>
         </div>
@@ -375,14 +376,35 @@ export default function PlayerDashboard({
   onLogout,
   assignments,
   onAssignmentCompleted,
+  currentUser,
 }: {
   onLogout: () => void
   assignments: any[]
   onAssignmentCompleted: (assignmentId: string | number, score: number, total: number) => void
+  currentUser: User
 }) {
   const [view, setView] = useState<'quests' | 'stats' | 'completed' | 'achievements' | 'leaderboard'>('quests')
 
   const [activeGame, setActiveGame] = useState<any>(null)
+
+  const player = { ...PLAYER, ...currentUser, grade: currentUser.year ?? PLAYER.grade }
+  const visibleAssignments = assignments
+    .filter(assignment =>
+      (assignment.grade ?? assignment.targetYear) === currentUser.year,
+    )
+    .map(assignment => {
+      const studentResult = Array.isArray(assignment.students)
+        ? assignment.students.find((student: any) =>
+            student.id === currentUser.id || student.name === currentUser.name,
+          )
+        : undefined
+
+      return {
+        ...assignment,
+        completed: studentResult?.completed === true || assignment.completedBy === currentUser.name,
+        score: studentResult?.accuracy ?? studentResult?.score ?? (assignment.completedBy === currentUser.name ? assignment.score : 0),
+      }
+    })
 
   const NAV = [
     { id: 'quests',       label: '🗺️ ACTIVE QUESTS',   color: '#ffe600',  desc: 'Play your homework' },
@@ -419,10 +441,10 @@ export default function PlayerDashboard({
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span style={{ fontSize: '18px' }}>{PLAYER.avatar}</span>
+            <span style={{ fontSize: '18px' }}>{player.avatar}</span>
             <div>
-              <p className="font-pixel" style={{ fontSize: '8px', color: '#e8e8ff' }}>{PLAYER.name}</p>
-              <p className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>{PLAYER.grade} · Lv.{PLAYER.level}</p>
+              <p className="font-pixel" style={{ fontSize: '8px', color: '#e8e8ff' }}>{player.name}</p>
+              <p className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>{player.grade} · Lv.{player.level}</p>
             </div>
           </div>
           <button onClick={onLogout} className="pixel-btn px-4 py-2"
@@ -440,20 +462,20 @@ export default function PlayerDashboard({
           {/* Player card */}
           <div className="mb-4 flex flex-col items-center gap-2 py-4 px-2"
             style={{ border: '1px solid #1e1e4a', background: 'rgba(255,230,0,0.03)' }}>
-            <span style={{ fontSize: '36px', filter: 'drop-shadow(0 0 8px #ffe600)' }}>{PLAYER.avatar}</span>
-            <span className="font-pixel" style={{ fontSize: '10px', color: '#ffe600', textShadow: '0 0 8px #ffe600' }}>{PLAYER.name}</span>
-            <span className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>{PLAYER.grade}</span>
+            <span style={{ fontSize: '36px', filter: 'drop-shadow(0 0 8px #ffe600)' }}>{player.avatar}</span>
+            <span className="font-pixel" style={{ fontSize: '10px', color: '#ffe600', textShadow: '0 0 8px #ffe600' }}>{player.name}</span>
+            <span className="font-body" style={{ fontSize: '11px', color: '#4a4a8a' }}>{player.grade}</span>
             <div className="flex items-center gap-2 mt-1">
               <span style={{ fontSize: '12px' }}>🔥</span>
-              <span className="font-pixel" style={{ fontSize: '8px', color: '#ff7c2a' }}>{PLAYER.streak} DAY STREAK</span>
+              <span className="font-pixel" style={{ fontSize: '8px', color: '#ff7c2a' }}>{player.streak} DAY STREAK</span>
             </div>
             <div className="w-full mt-1">
               <div className="flex justify-between mb-1">
-                <span className="font-pixel" style={{ fontSize: '6px', color: '#4a4a8a' }}>LV {PLAYER.level}</span>
-                <span className="font-pixel" style={{ fontSize: '6px', color: '#ffe600' }}>{Math.round((PLAYER.xp / PLAYER.xpNext) * 100)}%</span>
+                <span className="font-pixel" style={{ fontSize: '6px', color: '#4a4a8a' }}>LV {player.level}</span>
+                <span className="font-pixel" style={{ fontSize: '6px', color: '#ffe600' }}>{Math.round((player.xp / player.xpNext) * 100)}%</span>
               </div>
               <div className="w-full h-2 rounded-sm" style={{ background: '#0a0a22', border: '1px solid #1e1e4a' }}>
-                <div className="h-full rounded-sm" style={{ width: `${(PLAYER.xp / PLAYER.xpNext) * 100}%`, background: 'linear-gradient(90deg,#ffe600,#ff7c2a)', boxShadow: '0 0 6px #ffe600' }} />
+                <div className="h-full rounded-sm" style={{ width: `${(player.xp / player.xpNext) * 100}%`, background: 'linear-gradient(90deg,#ffe600,#ff7c2a)', boxShadow: '0 0 6px #ffe600' }} />
               </div>
             </div>
           </div>
@@ -474,17 +496,17 @@ export default function PlayerDashboard({
           ))}
 
           <div className="mt-auto px-1 py-2 text-center">
-            <p className="font-pixel" style={{ fontSize: '7px', color: '#2e2e5e', letterSpacing: '1px' }}>⭐ {PLAYER.totalStars} TOTAL STARS</p>
+            <p className="font-pixel" style={{ fontSize: '7px', color: '#2e2e5e', letterSpacing: '1px' }}>⭐ {player.totalStars} TOTAL STARS</p>
           </div>
         </aside>
 
         <main className="flex-1 p-8 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 57px)' }}>
           {view === 'quests' && <ActiveQuests
-  assignments={assignments}
+  assignments={visibleAssignments}
   onPlay={(assignment) => setActiveGame(assignment)}
 />}
-          {view === 'stats'        && <MyStats />}
-          {view === 'completed'    && <CompletedQuests assignments={assignments} />}
+          {view === 'stats'        && <MyStats player={player} />}
+          {view === 'completed'    && <CompletedQuests assignments={visibleAssignments} />}
           {view === 'achievements' && <Achievements />}
           {view === 'leaderboard'  && <Leaderboard />}
         </main>

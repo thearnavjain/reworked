@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { findUser, getUsers, type User } from './userData'
 import TeacherDashboard from './TeacherDashboard'
 import PlayerDashboard from './PlayerDashboard'
 import ParentDashboard from './ParentDashboard'
@@ -155,6 +156,7 @@ export default function App() {
   const [parentLoggedIn, setParentLoggedIn] = useState(false)
   const [teacherId, setTeacherId] = useState('')
   const [teacherPassword, setTeacherPassword] = useState('')
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [stars, setStars] = useState<{ x: number; y: number; size: number; opacity: number }[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -174,14 +176,36 @@ export default function App() {
 })
 
 const handleAssignmentCreated = (assignment: any) => {
+  const targetYear = assignment.grade ?? assignment.targetYear
+  const studentsForYear = getUsers()
+    .filter(user => user.role === 'student' && user.year === targetYear)
+    .map(user => ({
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      completed: false,
+      accuracy: 0,
+      timeSpent: '—',
+      attempts: 0,
+    }))
+
   setAssignments(prev => {
-    const updated = [...prev, assignment]
+    const updated = [
+      ...prev,
+      {
+        ...assignment,
+        targetYear,
+        students: studentsForYear,
+      },
+    ]
     localStorage.setItem('reworked_assignments', JSON.stringify(updated))
     return updated
   })
 }
 
 const handleAssignmentCompleted = (assignmentId: string | number, score: number, total: number) => {
+  if (!currentUser || currentUser.role !== 'student') return
+
   setAssignments(prev => {
     const accuracy = total > 0 ? Math.round((score / total) * 100) : 0
     const completedAt = new Date().toLocaleDateString('en-GB')
@@ -190,22 +214,25 @@ const handleAssignmentCompleted = (assignmentId: string | number, score: number,
       if (assignment.id !== assignmentId) return assignment
 
       const existingStudents = Array.isArray(assignment.students) ? assignment.students : []
-      const arnav = existingStudents.find((student: any) => student.name === 'Arnav Jain')
+      const existing = existingStudents.find((student: any) =>
+        student.id === currentUser.id || student.name === currentUser.name,
+      )
 
-      const updatedArnav = {
-        name: 'Arnav Jain',
-        avatar: arnav?.avatar ?? '🐼',
+      const updatedStudent = {
+        id: currentUser.id,
+        name: currentUser.name,
+        avatar: currentUser.avatar,
         completed: true,
         accuracy,
-        timeSpent: arnav?.timeSpent ?? '—',
-        attempts: (arnav?.attempts ?? 0) + 1,
+        timeSpent: existing?.timeSpent ?? '—',
+        attempts: (existing?.attempts ?? 0) + 1,
       }
 
-      const students = arnav
+      const students = existing
         ? existingStudents.map((student: any) =>
-            student.name === 'Arnav Jain' ? updatedArnav : student
+            student.id === currentUser.id || student.name === currentUser.name ? updatedStudent : student,
           )
-        : [...existingStudents, updatedArnav]
+        : [...existingStudents, updatedStudent]
 
       return {
         ...assignment,
@@ -213,7 +240,8 @@ const handleAssignmentCompleted = (assignmentId: string | number, score: number,
         score: accuracy,
         accuracy,
         completedAt,
-        completedBy: 'Arnav Jain',
+        completedBy: currentUser.name,
+        completedById: currentUser.id,
         students,
       }
     })
@@ -228,21 +256,14 @@ const handleLogin = (e: React.FormEvent) => {
 
   setLoginError('')
 
-  const validStudent =
-    userType === 'student' &&
-    username === 'Arnav Jain' &&
-    password === 'IHateMakingPasswords'
+  const role = userType === 'student' ? 'student' : 'parent'
+  const user = findUser(username, password, role)
 
-  const validParent =
-    userType === 'parent' &&
-    username === 'Atul Jain' &&
-    password === 'MySonIsFunny'
-
-  if (!validStudent && !validParent) {
+  if (!user) {
     setLoginError(
       userType === 'student'
         ? 'INVALID PLAYER CREDENTIALS'
-        : 'INVALID PARENT CREDENTIALS'
+        : 'INVALID PARENT CREDENTIALS',
     )
     return
   }
@@ -251,14 +272,10 @@ const handleLogin = (e: React.FormEvent) => {
 
   setTimeout(() => {
     setIsLoading(false)
+    setCurrentUser(user)
 
-    if (validStudent) {
-      setPlayerLoggedIn(true)
-    }
-
-    if (validParent) {
-      setParentLoggedIn(true)
-    }
+    if (user.role === 'student') setPlayerLoggedIn(true)
+    if (user.role === 'parent') setParentLoggedIn(true)
   }, 800)
 }
 const handleTeacherLogin = (e: React.FormEvent) => {
@@ -266,11 +283,9 @@ const handleTeacherLogin = (e: React.FormEvent) => {
 
   setLoginError('')
 
-  const validTeacher =
-    teacherId === 'Verma1227' &&
-    teacherPassword === 'VermaLovesTeaching'
+  const user = findUser(teacherId, teacherPassword, 'teacher')
 
-  if (!validTeacher) {
+  if (!user) {
     setLoginError('INVALID STAFF CREDENTIALS')
     return
   }
@@ -279,6 +294,7 @@ const handleTeacherLogin = (e: React.FormEvent) => {
 
   setTimeout(() => {
     setIsLoading(false)
+    setCurrentUser(user)
     setTeacherLoggedIn(true)
   }, 800)
 }
@@ -287,6 +303,7 @@ const handleTeacherLogin = (e: React.FormEvent) => {
   <TeacherDashboard
     onLogout={() => {
       setTeacherLoggedIn(false)
+      setCurrentUser(null)
       setTeacherId('')
       setTeacherPassword('')
     }}
@@ -298,14 +315,16 @@ const handleTeacherLogin = (e: React.FormEvent) => {
   <PlayerDashboard
       onLogout={() => {
         setPlayerLoggedIn(false)
+        setCurrentUser(null)
         setUsername('')
         setPassword('')
       }}
       assignments={assignments}
       onAssignmentCompleted={handleAssignmentCompleted}
+      currentUser={currentUser!}
   />
 )
-  if (parentLoggedIn)  return <ParentDashboard  onLogout={() => { setParentLoggedIn(false); setUsername(''); setPassword('') }} />
+  if (parentLoggedIn)  return <ParentDashboard currentUser={currentUser!} onLogout={() => { setParentLoggedIn(false); setCurrentUser(null); setUsername(''); setPassword('') }} />
 
   return (
     <div
