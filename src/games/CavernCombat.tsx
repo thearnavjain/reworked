@@ -909,11 +909,15 @@ function BeastSprite({
    * frames very close together, so this prevents a neighbouring sprite or
    * phase label from bleeding into the battle area.
    */
-  const crop = Math.min(3, Math.floor(frame.width / 12), Math.floor(frame.height / 12))
+  // The sheets sit very close to one another, and several of them have
+  // phase labels immediately above the first frame. A larger safety gutter
+  // keeps neighbouring art/labels out of the visible crop.
+  const crop = Math.min(10, Math.floor(frame.width / 8), Math.floor(frame.height / 8))
   const cropX = frame.x + crop
   const cropY = frame.y + crop
   const cropWidth = Math.max(1, frame.width - crop * 2)
   const cropHeight = Math.max(1, frame.height - crop * 2)
+  const beastFacesLeft = beast.name !== 'Giant Radioactive Bat'
 
   /*
    * Scale the cropped frame into a consistent 250 x 220 battle area while
@@ -946,6 +950,8 @@ function BeastSprite({
           backgroundRepeat: 'no-repeat',
           backgroundSize: `${beast.sheetWidth * scale}px ${beast.sheetHeight * scale}px`,
           backgroundPosition: '0 0',
+          transform: beastFacesLeft ? 'scaleX(-1)' : undefined,
+          transformOrigin: 'center',
         }}
       />
     </div>
@@ -967,13 +973,13 @@ type WizardFrame = {
 const WIZARD_ANIMATIONS: Record<WizardAnimation, WizardFrame[]> = {
   // The label on the left of the sheet is intentionally excluded from every crop.
   idle: [
-    { x: 165, y: 0, width: 180, height: 210, duration: 180 },
-    { x: 355, y: 0, width: 180, height: 210, duration: 180 },
-    { x: 550, y: 0, width: 185, height: 210, duration: 180 },
-    { x: 745, y: 0, width: 190, height: 210, duration: 180 },
-    { x: 940, y: 0, width: 185, height: 210, duration: 180 },
-    { x: 1130, y: 0, width: 190, height: 210, duration: 180 },
-    { x: 1320, y: 0, width: 195, height: 210, duration: 200 },
+    { x: 171, y: 10, width: 145, height: 198, duration: 180 },
+    { x: 357, y: 10, width: 142, height: 198, duration: 180 },
+    { x: 542, y: 9, width: 123, height: 199, duration: 180 },
+    { x: 700, y: 10, width: 152, height: 197, duration: 180 },
+    { x: 882, y: 10, width: 150, height: 198, duration: 180 },
+    { x: 1054, y: 14, width: 152, height: 193, duration: 180 },
+    { x: 1229, y: 10, width: 145, height: 198, duration: 200 },
   ],
   attack: [
     { x: 165, y: 210, width: 200, height: 195, duration: 120 },
@@ -984,19 +990,18 @@ const WIZARD_ANIMATIONS: Record<WizardAnimation, WizardFrame[]> = {
     { x: 1270, y: 210, width: 265, height: 195, duration: 190 },
   ],
   hit: [
-    { x: 165, y: 405, width: 185, height: 195, duration: 110 },
-    { x: 385, y: 405, width: 190, height: 195, duration: 110 },
-    { x: 600, y: 405, width: 210, height: 195, duration: 120 },
-    { x: 850, y: 405, width: 220, height: 195, duration: 120 },
-    { x: 1115, y: 405, width: 190, height: 195, duration: 130 },
-    { x: 1320, y: 405, width: 190, height: 195, duration: 140 },
+    { x: 171, y: 412, width: 145, height: 174, duration: 110 },
+    { x: 391, y: 405, width: 172, height: 185, duration: 110 },
+    { x: 634, y: 445, width: 174, height: 139, duration: 120 },
+    { x: 874, y: 473, width: 208, height: 117, duration: 120 },
+    { x: 1111, y: 415, width: 141, height: 172, duration: 130 },
   ],
   victory: [
     { x: 160, y: 600, width: 210, height: 220, duration: 150 },
-    { x: 380, y: 600, width: 215, height: 220, duration: 150 },
-    { x: 635, y: 600, width: 220, height: 220, duration: 160 },
-    { x: 900, y: 600, width: 225, height: 220, duration: 170 },
-    { x: 1130, y: 600, width: 200, height: 220, duration: 200 },
+    { x: 371, y: 612, width: 188, height: 201, duration: 150 },
+    { x: 639, y: 597, width: 190, height: 217, duration: 160 },
+    { x: 896, y: 592, width: 220, height: 224, duration: 170 },
+    { x: 1114, y: 598, width: 167, height: 214, duration: 200 },
   ],
 }
 
@@ -1028,7 +1033,7 @@ function WizardSprite({ animation }: { animation: WizardAnimation }) {
   }, [animation, frames])
 
   const frame = frames[Math.min(frameIndex, frames.length - 1)]
-  const crop = 3
+  const crop = Math.min(6, Math.floor(frame.width / 10), Math.floor(frame.height / 10))
   const cropX = frame.x + crop
   const cropY = frame.y + crop
   const cropWidth = Math.max(1, frame.width - crop * 2)
@@ -1501,7 +1506,8 @@ export default function CavernCombat({
 
 const styles: Record<string, React.CSSProperties> = {
   shell: {
-    minHeight: '100vh',
+    height: '100dvh',
+    minHeight: 0,
     width: '100%',
     color: '#f4f1ff',
     backgroundSize: 'cover',
@@ -1511,7 +1517,9 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: 'hidden',
     position: 'relative',
     boxSizing: 'border-box',
-    padding: '22px clamp(16px, 4vw, 52px) 28px',
+    padding: '12px clamp(14px, 3vw, 36px) 10px',
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   header: {
@@ -1520,7 +1528,8 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     gap: 20,
     maxWidth: 1180,
-    margin: '0 auto 10px',
+    width: '100%',
+    margin: '0 auto 6px',
   },
 
   kicker: {
@@ -1532,7 +1541,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   title: {
     margin: '5px 0 0',
-    fontSize: 'clamp(22px, 4vw, 38px)',
+    fontSize: 'clamp(20px, 3vw, 32px)',
     letterSpacing: 1,
   },
 
@@ -1548,8 +1557,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   progressTrack: {
     maxWidth: 1180,
-    height: 5,
-    margin: '0 auto 22px',
+    width: '100%',
+    height: 4,
+    margin: '0 auto 8px',
     background: 'rgba(255,255,255,.12)',
     overflow: 'hidden',
   },
@@ -1562,29 +1572,35 @@ const styles: Record<string, React.CSSProperties> = {
 
   main: {
     maxWidth: 1180,
+    width: '100%',
     margin: '0 auto',
+    flex: '1 1 auto',
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   beastStage: {
-    minHeight: 315,
+    minHeight: 235,
+    height: 235,
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 'clamp(20px, 8vw, 120px)',
-    padding: '18px 10px 28px',
+    padding: '6px 10px 10px',
     animation: 'cavernFadeIn .5s ease-out',
   },
 
   player: {
-    width: 110,
+    width: 180,
     textAlign: 'center',
     opacity: .9,
   },
 
   playerSprite: {
-    width: 210,
-    height: 220,
+    width: 180,
+    height: 205,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1605,8 +1621,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   beastWrap: {
-    width: 270,
-    minHeight: 260,
+    width: 250,
+    minHeight: 225,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -1615,8 +1631,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   beast: {
-    width: 250,
-    height: 220,
+    width: 235,
+    height: 205,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1712,8 +1728,10 @@ const styles: Record<string, React.CSSProperties> = {
 
   questionCard: {
     maxWidth: 860,
+    width: '100%',
     margin: '0 auto',
-    padding: '24px clamp(18px, 4vw, 40px) 30px',
+    padding: '14px clamp(14px, 3vw, 26px) 16px',
+    boxSizing: 'border-box',
     background: 'rgba(7, 6, 19, .88)',
     border: '1px solid rgba(166, 139, 255, .34)',
     boxShadow: '0 18px 50px rgba(0,0,0,.35)',
@@ -1722,7 +1740,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   questionNumber: {
     color: '#a991ef',
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 3,
     fontWeight: 900,
     marginBottom: 10,
@@ -1730,19 +1748,19 @@ const styles: Record<string, React.CSSProperties> = {
 
   question: {
     margin: 0,
-    fontSize: 'clamp(19px, 3vw, 28px)',
+    fontSize: 'clamp(17px, 2.4vw, 24px)',
     lineHeight: 1.3,
   },
 
   answers: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    gap: 12,
-    marginTop: 24,
+    gap: 8,
+    marginTop: 14,
   },
 
   answer: {
-    minHeight: 60,
+    minHeight: 48,
     border: '1px solid rgba(139, 119, 214, .35)',
     background: 'rgba(15, 13, 34, .92)',
     color: '#f1edff',
@@ -1752,7 +1770,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 12,
     textAlign: 'left',
     cursor: 'pointer',
-    fontSize: 15,
+    fontSize: 14,
     transition: 'transform .15s ease, border-color .15s ease, box-shadow .15s ease',
   },
 
@@ -1784,7 +1802,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   footer: {
   maxWidth: 1180,
-  margin: '24px auto 0',
+  width: '100%',
+  margin: '8px auto 0',
+  flex: '0 0 auto',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -1793,6 +1813,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   footerProgress: {
     display: 'flex',
+    minWidth: 0,
     alignItems: 'center',
     flex: 1,
     maxWidth: 900,
@@ -1800,9 +1821,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   pathNode: {
-    width: 27,
-    height: 27,
-    flex: '0 0 27px',
+    width: 23,
+    height: 23,
+    flex: '0 0 23px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1844,12 +1865,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '40px 20px',
+    padding: '18px 14px',
   },
 
   finishCard: {
     width: 'min(680px, 100%)',
-    padding: '48px clamp(24px, 6vw, 64px)',
+    padding: '28px clamp(18px, 5vw, 44px)',
     background: 'rgba(7, 6, 19, .9)',
     border: '1px solid rgba(176, 155, 255, .48)',
     boxShadow: '0 0 50px rgba(124, 92, 255, .18), 0 24px 70px rgba(0,0,0,.55)',
@@ -1858,8 +1879,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   finishIcon: {
-    height: 220,
-    marginBottom: 10,
+    height: 170,
+    marginBottom: 6,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1889,12 +1910,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 12,
-    margin: '30px auto',
+    margin: '18px auto',
     maxWidth: 420,
   },
 
   finishStat: {
-    padding: '18px 12px',
+    padding: '12px 10px',
     border: '1px solid rgba(166, 139, 255, .28)',
     background: 'rgba(15, 13, 34, .8)',
     display: 'flex',
@@ -1911,7 +1932,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   finishStatValue: {
     color: '#f3eaff',
-    fontSize: 28,
+    fontSize: 24,
   },
 
   finishActions: {
