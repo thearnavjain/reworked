@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import CyberpunkBiking from './games/CyberpunkBiking'
+import CavernCombat from './games/CavernCombat'
 import { getXPProgress, type User } from './userData'
 const GAME_COLORS: Record<string, string> = {
   'Dragon Dungeon':     '#ff7c2a',
@@ -488,13 +489,23 @@ export default function PlayerDashboard({
   ] as const
 
   if (activeGame) {
-    return (
-      <CyberpunkBiking
-        questions={Array.isArray(activeGame.questions) ? activeGame.questions : []}
-        onComplete={(score, total) => onAssignmentCompleted(activeGame.id, score, total)}
-        onExit={() => setActiveGame(null)}
-      />
-    )
+    const gameProps = {
+      questions: Array.isArray(activeGame.questions) ? activeGame.questions : [],
+      onComplete: (score: number, total: number) =>
+        onAssignmentCompleted(activeGame.id, score, total),
+      onExit: () => setActiveGame(null),
+    }
+
+    switch (activeGame.game) {
+      case 'Cavern Combat':
+        return <CavernCombat {...gameProps} />
+
+      case 'Cyberpunk Biking':
+      default:
+        // Keep the existing behaviour for games that have not been
+        // implemented in the player dashboard yet.
+        return <CyberpunkBiking {...gameProps} />
+    }
   }
 
   return (
